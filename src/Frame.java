@@ -1,5 +1,9 @@
 
 public class Frame {
+	private float C[];
+	private int time;
+	
+	private float avgC;
 	
 	@Override
 	public String toString() {
@@ -9,17 +13,12 @@ public class Frame {
 		}
 		return result+"\n";
 	}
-
-	private float C[];
-	private int time;
 	
-	public float getAvgC(){
-		float avg = 0;
-		for(float c: C){
-			avg += c;
-		}
-		return avg/C.length;
+	
+	public float getAvgC(){		
+		return this.avgC;
 	}
+
 
 	public float[] getC() {
 		return C;
@@ -27,6 +26,11 @@ public class Frame {
 
 	public void setC(float[] c) {
 		C = c;
+		float avg = 0;
+		for(float cc: C){
+			avg += cc;
+		}
+		this.avgC = avg/C.length;
 	}
 
 	public int getTime() {
@@ -35,6 +39,10 @@ public class Frame {
 
 	public void setTime(int time) {
 		this.time = time;
+	}
+	
+	public void setAvgC(float avg){
+		this.avgC = avg;
 	}
 
 }

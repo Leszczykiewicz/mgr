@@ -24,15 +24,23 @@ public class PearsonCorrelation {
 			second_values_avg += second_values[i];
 			multiply_avg += multiply[i];
 		}
+//		System.out.println("start");
 		first_values_avg /= first_values.length;
 		second_values_avg /= second_values.length;
 		multiply_avg /= multiply.length;
 		
+//		System.out.println(first_values_avg);
+//		System.out.println(second_values_avg);
+//		System.out.println(multiply_avg);
+		
 		covariance =  multiply_avg - (first_values_avg * second_values_avg);
+//		System.out.println(covariance);
 		float first_values_deviation = calculateStandardDeviation(first_values);
 		float second_values_deviation = calculateStandardDeviation(second_values);
-		
+//		System.out.println(first_values_deviation);
+//		System.out.println(second_values_deviation);
 		correlation = covariance/(first_values_deviation*second_values_deviation);
+//		System.out.println(correlation);
 	}
 	
 	

@@ -2,11 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Downloads/jfreechart-1.0.1.zip"/>
-	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Downloads/jcommon-1.0.23.zip"/>
-	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Downloads/jcommon-1.0.23/jcommon-1.0.23/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Downloads/jfreechart-1.0.1/jfreechart-1.0.1/jfreechart-1.0.1-demo.jar"/>
-	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Downloads/jheatchart-0.6/jheatchart-0.6.jar"/>
 	<classpathentry kind="lib" path="lib/jgoodies-forms.jar" sourcepath="lib/jgoodies-forms-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Mgr/lib/jgoodies-forms-javadoc.jar!/"/>
@@ -17,5 +12,9 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Mgr/lib/jgoodies-common-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Desktop/mgr jary/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Desktop/mgr jary/jheatchart-0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Desktop/mgr jary/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/a.leszczynska/Desktop/mgr jary/commons-math3-3.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

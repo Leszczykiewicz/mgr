@@ -6,14 +6,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class FileUtils {
 		
 	public ArrayList<Frame> getFramesForPixel(String file, int size){
-		System.out.println("get frames for pixel");
+//		System.out.println("get frames for pixel");
 		ArrayList<Frame> result = new ArrayList<Frame>();
 		Frame frame = null;
 		float[] C = new float[size];
@@ -76,7 +74,7 @@ public class FileUtils {
 			        	for(String k:n){
 			        		if(k.trim().length()>0){
 			        			float tmp =  Float.parseFloat(k);
-			        			System.out.println(tmp);
+//			        			System.out.println(tmp);
 			        			if(tmp>1){
 			        				tmp = 1;
 			        			}
@@ -98,13 +96,70 @@ public class FileUtils {
 //		}
 		return result;
 	}
+	public ArrayList<Frame> getFramesForGenerate(String file){
+		ArrayList<Frame> result = new ArrayList<Frame>();
+		Frame frame = null;
+		int lineCounter = 0;
+		for(String line : file.split("\n")){
+			frame = new Frame();
+			frame.setAvgC(Float.parseFloat(line));
+			frame.setTime(lineCounter);
+			result.add(frame);
+			lineCounter++;
+		}
+		return result;
+
+	}
+	public ArrayList<Frame> getFramesForManchester(String file, int size){
+		ArrayList<Frame> result = new ArrayList<Frame>();
+		Frame frame = null;
+		float[] C = new float[size];
+		int i = 0;
+		int lineCounter = 0;
+		for(String line : file.split("\n")){
+//			System.out.println("linia pierwsza: " + line);
+			
+				if(!line.trim().matches("##EOF")){
+		        	
+						if(line.trim().matches("## frame \\d+ .+")){
+//							System.out.println("nowa ramka");
+							lineCounter++;
+							frame = new Frame();
+							frame.setTime(lineCounter);
+						}
+						else{
+
+
+			        	String[] n = line.split(" ");
+			        	for(String k:n){
+			        		if(k.trim().length()>0){
+			        			float tmp =  Float.parseFloat(k);
+//			        			System.out.println(tmp);
+			        			if(tmp>1){
+			        				tmp = 1;
+			        			}
+			        			else if(tmp < -1){
+			        				tmp = -1;
+			        			}		        				
+			        			C[i] = tmp;
+			        			i++;
+			        		}		        			
+			        	}
+			        }
+			        if(i == size){
+			        	frame.setC(C);
+			        	result.add(frame);
+			        	i = 0;
+			        	C = new float[size];
+			        }}
+				
+		}
+		return result;
+	}
 	
-	
-	
-	public String openFile(String path) {
-        FileInputStream fis = null;
+	public String loadFile(File file){
+		FileInputStream fis = null;
         try {
-            File file = new File(path);
             fis = new FileInputStream(file);
             byte[] data = new byte[(int) file.length()];
             fis.read(data);
@@ -124,6 +179,11 @@ public class FileUtils {
         }
 
         return null;
+	}
+	
+	public String openFile(String path) {
+		File file = new File(path);
+		return loadFile(file);
     }
 	
 	 public boolean saveToFile(String path, String content){

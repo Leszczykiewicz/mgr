@@ -1,21 +1,60 @@
+import java.awt.BorderLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 
 public class ChartUtils
 {
+	public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, Statistics[] statistics, int[] correlation, ArrayList<Frame> frames) throws FileNotFoundException, IOException
+	   {
+	      JFreeChart lineChart = ChartFactory.createXYLineChart(
+	         chartTitle,
+	         xName,yName,
+	         createDataset(statistics, correlation, frames),
+	         PlotOrientation.VERTICAL,
+	         true,true,false);
+	         
+	      ChartPanel chartPanel = new ChartPanel( lineChart );
+	      panel.setLayout(new BorderLayout());
+	      panel.add(chartPanel, BorderLayout.CENTER);
+//	      panel.add(chartPanel);
+//	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
+	      
+	   }
+	
+	public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, Statistics[] statistics) throws FileNotFoundException, IOException
+	   {
+	      JFreeChart lineChart = ChartFactory.createXYLineChart(
+	         chartTitle,
+	         xName,yName,
+	         createDataset(statistics),
+	         PlotOrientation.VERTICAL,
+	         true,true,false);
+	         
+	      ChartPanel chartPanel = new ChartPanel( lineChart );
+	      panel.setLayout(new BorderLayout());
+	      panel.add(chartPanel, BorderLayout.CENTER);
+//	      panel.add(chartPanel);
+	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
+	      
+	   }
+	
    public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, ArrayList<Frame> framesA, ArrayList<Frame> framesB)
    {
       JFreeChart lineChart = ChartFactory.createXYLineChart(
@@ -26,10 +65,42 @@ public class ChartUtils
          true,true,false);
          
       ChartPanel chartPanel = new ChartPanel( lineChart );
-      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 734 ) );
-      panel.add(chartPanel);
+      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 720 ) );
+      panel.setLayout(new BorderLayout());
+      panel.add(chartPanel, BorderLayout.CENTER);
+      
    }
    
+   public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, ArrayList<Frame> frames) throws IOException
+   {
+      JFreeChart lineChart = ChartFactory.createXYLineChart(
+         chartTitle,
+         xName,yName,
+         createDataset(frames),
+         PlotOrientation.VERTICAL,
+         true,true,false);
+         
+      ChartPanel chartPanel = new ChartPanel( lineChart );
+      panel.setLayout(new BorderLayout());
+      panel.add(chartPanel, BorderLayout.CENTER);
+      ChartUtilities.saveChartAsJPEG(new File("wyniki/przebieg_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
+   }
+   
+   public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, int[] correlation) throws IOException
+   {
+      JFreeChart lineChart = ChartFactory.createXYLineChart(
+         chartTitle,
+         xName,yName,
+         createDataset(correlation),
+         PlotOrientation.VERTICAL,
+         true,true,false);
+         
+      ChartPanel chartPanel = new ChartPanel( lineChart );
+      panel.setLayout(new BorderLayout());
+      panel.add(chartPanel, BorderLayout.CENTER);
+      ChartUtilities.saveChartAsJPEG(new File("wyniki/autokorelacja_" +Main.dlugosc_okna_czasowego_n+ "_"+ Main.file.getName()+".jpg"), lineChart, 1120, 720);
+      
+   }
    public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, CorrelationObject[] correlation)
    {
       JFreeChart lineChart = ChartFactory.createXYLineChart(
@@ -40,11 +111,12 @@ public class ChartUtils
          true,true,false);
          
       ChartPanel chartPanel = new ChartPanel( lineChart );
-      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 734 ) );
-      panel.add(chartPanel);
+      panel.setLayout(new BorderLayout());
+      panel.add(chartPanel, BorderLayout.CENTER);
    }
    
-   public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, float[] framesA, float[] framesB)
+   
+   public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, float[] framesA, float[] framesB) throws IOException
    {
       JFreeChart lineChart = ChartFactory.createXYLineChart(
          chartTitle,
@@ -54,8 +126,9 @@ public class ChartUtils
          true,true,false);
          
       ChartPanel chartPanel = new ChartPanel( lineChart );
-      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 734 ) );
-      panel.add(chartPanel);
+      panel.setLayout(new BorderLayout());
+      panel.add(chartPanel, BorderLayout.CENTER);
+//      ChartUtilities.saveChartAsJPEG(new File("wyniki/przebieg_" + Main.dlugosc_okna_czasowego_n+"_"+Main.file + ".jpg"), lineChart, 1120, 720);
    }
    
    public ChartUtils(String applicationTitle, String chartTitle, String xName, String yName, CorrelationObject[] correlation)
@@ -68,19 +141,34 @@ public class ChartUtils
          true,true,false);
          
       ChartPanel chartPanel = new ChartPanel( lineChart );
-      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 734 ) );
+      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 720 ) );
    }
 
+   private XYSeriesCollection createDataset(int[] correlations)
+   {
+	   int idA = 0;
+	   XYSeries seriesA = new XYSeries("Korelacja");
+	   for(int i: correlations){
+		   seriesA.add(idA, i);
+		   idA++;
+	   }
+	      
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+	   dataset.addSeries(seriesA);
+
+      return dataset;
+   }
+   
    private XYSeriesCollection createDataset(ArrayList<Frame> framesA, ArrayList<Frame> framesB)
    {
 	   int idA = 0, idB=0;
-	   XYSeries seriesA = new XYSeries("frameA");
+	   XYSeries seriesA = new XYSeries("P³aszczyzna A");
 	   for(Frame f : framesA){
 		   seriesA.add(f.getTime(), f.getAvgC());
 		   idA++;
 	   }
 	   
-	   XYSeries seriesB = new XYSeries("frameB");
+	   XYSeries seriesB = new XYSeries("P³aszczyzna B");
 	   for(Frame f : framesB){
 		   seriesB.add(f.getTime(), f.getAvgC());
 		   idB++;
@@ -92,16 +180,109 @@ public class ChartUtils
       return dataset;
    }
    
+   private XYSeriesCollection createDataset(Statistics[] statistics)
+   {
+	   XYSeries seriesA = new XYSeries("œrednia");
+	   XYSeries seriesB = new XYSeries("mediana");
+	   XYSeries seriesC = new XYSeries("odchylenie standardowe");
+	   XYSeries seriesD = new XYSeries("wariancja");
+	   for(Statistics s : statistics){
+		   seriesA.add(s.getTime(), s.getAvg());
+		   seriesB.add(s.getTime(), s.getMedian());
+		   seriesC.add(s.getTime(), s.getStd());
+		   seriesD.add(s.getTime(), s.getVariance());
+	   }
+	   
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+	   dataset.addSeries(seriesA);
+	   dataset.addSeries(seriesB);
+	   dataset.addSeries(seriesC);
+	   dataset.addSeries(seriesD);
+
+      return dataset;
+   }
+   
+   private XYSeriesCollection createDataset(Statistics[] statistics, int[] correlation, ArrayList<Frame> frames)
+   {
+	   XYSeries seriesA = new XYSeries("œrednia");
+	   XYSeries seriesB = new XYSeries("mediana");
+	   XYSeries seriesC = new XYSeries("odchylenie standardowe");
+	   XYSeries seriesD = new XYSeries("wariancja");
+	   XYSeries seriesE = new XYSeries("autokorelacja");
+	   XYSeries seriesF = new XYSeries("Przebieg");
+	   
+	   for(Statistics s : statistics){
+		   seriesA.add(s.getTime(), s.getAvg()*100);
+		   seriesB.add(s.getTime(), s.getMedian()*100);
+		   seriesC.add(s.getTime(), s.getStd()*100);
+		   seriesD.add(s.getTime(), s.getVariance()*100);
+	   }
+	   
+	   int idE = 0;
+
+	   for(int i: correlation){
+		   seriesE.add(idE, i);
+		   idE++;
+	   }
+	   
+	   int idF = 0;   
+	   for(Frame f : frames){
+		   seriesF.add(f.getTime(), f.getAvgC()*100);
+		   idF++;
+	   }
+	   
+	  
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+
+	      
+	   if(GUI1.avg.isSelected()){
+		   dataset.addSeries(seriesA);
+	   }
+	   if(GUI1.median.isSelected()){
+		   dataset.addSeries(seriesB);
+	   }
+	   if(GUI1.std.isSelected()){
+		   dataset.addSeries(seriesC);
+	   }
+	   if(GUI1.variance.isSelected()){
+		   dataset.addSeries(seriesD);
+	   }
+	   if(GUI1.autocorrelationButton.isSelected()){
+		   dataset.addSeries(seriesE);
+	   }
+	   if(GUI1.measurement.isSelected()){
+		   dataset.addSeries(seriesF);
+	   }
+
+      return dataset;
+   }
+   
+   private XYSeriesCollection createDataset(ArrayList<Frame> frames)
+   {
+	   int idA = 0, idB=0;
+	   XYSeries seriesA = new XYSeries("P³aszczyzna A");
+	   for(Frame f : frames){
+		   seriesA.add(f.getTime(), f.getAvgC());
+		   idA++;
+	   }
+	   
+	  
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+	   dataset.addSeries(seriesA);
+
+      return dataset;
+   }
+   
    private XYSeriesCollection createDataset(float[] framesA, float[] framesB)
    {
-	   XYSeries seriesA = new XYSeries("frameA");
+	   XYSeries seriesA = new XYSeries("P³aszczyzna A");
 	   int i = 0;
 	   for(float f : framesA){
 		   seriesA.add(i, f);
 		   i++;
 	   }
 	   i=0;
-	   XYSeries seriesB = new XYSeries("frameB");
+	   XYSeries seriesB = new XYSeries("P³aszczyzna B");
 	   for(float f : framesB){
 		   seriesB.add(i, f);
 		   i++;
@@ -116,7 +297,7 @@ public class ChartUtils
    
    private XYSeriesCollection createDataset(CorrelationObject[] correlation)
    {
-	   XYSeries series = new XYSeries("correlation");
+	   XYSeries series = new XYSeries("Korelacja");
 	   for(CorrelationObject c : correlation){
 		   series.add(c.id, c.value);
 	   }

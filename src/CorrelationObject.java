@@ -4,10 +4,10 @@ public class CorrelationObject implements Comparable{
 	public int id;
 	
 	public int compareTo(Object arg0) {
-		if(this.value > ((CorrelationObject)arg0).value){
+		if(this.value < ((CorrelationObject)arg0).value){
 			return 1;
 		}
-		if(this.value < ((CorrelationObject)arg0).value){
+		if(this.value > ((CorrelationObject)arg0).value){
 			return -1;
 		}
 		else
