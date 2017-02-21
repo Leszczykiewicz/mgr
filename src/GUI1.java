@@ -35,7 +35,6 @@ public class GUI1 extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-//	public static Dimension frameDimension = new Dimension(1250, 700);
 	
     public static JPanel chartDataPanel = new JPanel();
     public static JPanel chartCorrelationPanel = new JPanel();
@@ -85,7 +84,6 @@ public class GUI1 extends JFrame {
     private void initUI() {
 
         setTitle("GUI");
-//        setSize(frameDimension);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -191,7 +189,6 @@ public class GUI1 extends JFrame {
     	calculateCorrelationButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-//				System.out.println("click click");
 				Main.dlugosc_przesuniecia_k = (Integer) differenceSpinner.getValue();
 				Main.dlugosc_okna_czasowego_n = (Integer) kSpinner.getValue();
 				Main.czas_poczatkowy_t = (Integer) startPointSpinner.getValue();
@@ -230,9 +227,7 @@ public class GUI1 extends JFrame {
 			}
 		});
     	
-
-    	Insets insets = new Insets(5, 5, 5, 5);
-    	
+    	Insets insets = new Insets(5, 5, 5, 5);    	
 
     	gridbag.setConstraints(kLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(kStartLabel, new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
@@ -252,8 +247,7 @@ public class GUI1 extends JFrame {
     	gridbag.setConstraints(pixelSpinner, new GridBagConstraints(1, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(timeForPixelSpinner, new GridBagConstraints(1, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(testSpinner, new GridBagConstraints(1, 8, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	   	
-    
+    	   	  
     	kSpinner.addChangeListener(new ChangeListener() {      
     		  public void stateChanged(ChangeEvent e) {
     		    Main.dlugosc_okna_czasowego_n = (Integer) kSpinner.getValue();		    
@@ -277,8 +271,7 @@ public class GUI1 extends JFrame {
   		    Main.czas_poczatkowy_t = (Integer) startPointSpinner.getValue();
   		  }
   		});
-    	
-    	
+    	  	
     	settingsPanel.add(kLabel);
     	settingsPanel.add(kSpinner);
     	settingsPanel.add(differenceLabel);
@@ -404,7 +397,6 @@ public class GUI1 extends JFrame {
         
     	operationTypePanel.add(autocorrelation);
     	operationTypePanel.add(speed);
-
         
 //      -----------------------------------------------------------------------------------
 //      panel na wybór pliku
@@ -507,51 +499,40 @@ public class GUI1 extends JFrame {
         allPanel.setLayout(new BorderLayout());
         JPanel chartButtonPanel = new JPanel();
         measurement.setSelected(true);
-//      measurement.setBackground(Color.RED);
         measurement.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Main.generateAllChart();
-				
+				Main.generateAllChart();		
 			}
 		});
         avg.setSelected(true);
-//        avg.setBackground(Color.RED);
         avg.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Main.generateAllChart();
-				
+				Main.generateAllChart();				
 			}
 		});
         median.setSelected(true);
-//        median.setBackground(Color.BLUE);
         median.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Main.generateAllChart();
-				
+				Main.generateAllChart();				
 			}
 		});
-//        std.setBackground(Color.GREEN);
         std.setSelected(true);
         std.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Main.generateAllChart();
-				
+				Main.generateAllChart();			
 			}
 		});
-//        variance.setBackground(Color.YELLOW);
         variance.setSelected(true);
         variance.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Main.generateAllChart();
-				
+				Main.generateAllChart();				
 			}
 		});
-//        autocorrelationButton.setBackground(Color.MAGENTA);
         autocorrelationButton.setSelected(true);
         autocorrelationButton.addActionListener(new ActionListener() {
 			
@@ -560,6 +541,7 @@ public class GUI1 extends JFrame {
 				
 			}
 		});
+        chartButtonPanel.add(measurement);
         chartButtonPanel.add(avg);
         chartButtonPanel.add(median);
         chartButtonPanel.add(std);
@@ -709,7 +691,6 @@ public class GUI1 extends JFrame {
     	    JDialog.setDefaultLookAndFeelDecorated(true);
     	    
     	    JFrame frame = new JFrame("JComboBox Test");
-//    	    frame.setSize(screenSize);
     	    
     	    frame.setLayout(new FlowLayout());
     	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
