@@ -1,12 +1,8 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,11 +21,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -38,21 +31,50 @@ import javax.swing.event.ChangeListener;
 public class GUI1 extends JFrame {
     
     
-    public static Dimension frameDimension = new Dimension(1250, 700);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+//	public static Dimension frameDimension = new Dimension(1250, 700);
+	
     public static JPanel chartDataPanel = new JPanel();
     public static JPanel chartCorrelationPanel = new JPanel();
     public static JPanel chartTestPanel = new JPanel();
     public static JPanel chartCorrelationInTimePanel = new JPanel();
     public static JPanel chartStatisticPanel = new JPanel();
     public static JPanel chartAllPanel = new JPanel();
+    public static JPanel allPanel;
+    
     public static JPanel pixelPanel = new JPanel();
     public static JPanel squarePanel = new JPanel();
+    
     public static JCheckBox avg = new JCheckBox("œrednia");
     public static JCheckBox median = new JCheckBox("mediana");
-    public static  JCheckBox std = new JCheckBox("ochylenie standardowe");
+    public static JCheckBox std = new JCheckBox("ochylenie standardowe");
     public static JCheckBox variance = new JCheckBox("wariancja");
     public static JCheckBox autocorrelationButton = new JCheckBox("autokorelacja");
     public static JCheckBox measurement = new JCheckBox("przebieg");
+    
+    public static JLabel kLabel;
+    public static JLabel kStartLabel;
+    public static JLabel differenceLabel;
+    public static JLabel startPointLabel;
+    public static JLabel pixelLabel;
+    public static JButton calculateCorrelationButton;
+    public static JLabel timeForPixelLabel;
+    public static JButton createPixelMapButton;
+    public static JLabel testLabel;
+    public static JButton testButton;
+	
+    public static JSpinner kSpinner;
+    public static JSpinner kStartSpinner;
+    public static JSpinner differenceSpinner;
+    public static JSpinner startPointSpinner;
+    public static JSpinner pixelSpinner;
+    public static JSpinner timeForPixelSpinner;
+    public static JSpinner testSpinner;
+    
+    public static JTabbedPane tabbedPanel;
    
     public GUI1() {
 
@@ -63,7 +85,7 @@ public class GUI1 extends JFrame {
     private void initUI() {
 
         setTitle("GUI");
-        setSize(frameDimension);
+//        setSize(frameDimension);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -74,101 +96,52 @@ public class GUI1 extends JFrame {
         mainPanel.setLayout(new BorderLayout(0, 0));
         mainPanel.setSize(getMaximumSize());
         
-        JTabbedPane tabbedPanel = new JTabbedPane();
+//      -----------------------------------------------------------------------------------
+//        miejsce na wykresy
+//        ---------------------------------------------------------------------------------
+        tabbedPanel = new JTabbedPane();
         
-        
+//      -----------------------------------------------------------------------------------
+//        panel konfiguracyjny (wszystkie przyciski)
+//      -----------------------------------------------------------------------------------
+                
         JPanel configurationPanel = new JPanel();
-        configurationPanel.setLayout(new FlowLayout() {
-            public Dimension preferredLayoutSize(Container target) {
-                Dimension sd = super.preferredLayoutSize(target);
-                sd.height = (int) (frameDimension.getHeight()/5 * 2);
-                return sd;
-            }
-        });
-
-        configurationPanel.setSize(this.getSize().width/5*2, this.getSize().height);
+        
+//    -----------------------------------------------------------------------------------
+//      ca³a prawa czêœæ (tam gdzie s¹ zak³adki)
+//    -----------------------------------------------------------------------------------
 
         JPanel resultPanel = new JPanel();
-        resultPanel.setLayout(new FlowLayout(){
-            public Dimension preferredLayoutSize(Container target) {
-                Dimension sd = super.preferredLayoutSize(target);
-
-                sd.width = (int) (frameDimension.getWidth()/5 * 3);
-
-                return sd;
-            }
-        });
-
-        resultPanel.setSize(this.getSize().width/5*3, this.getSize().height);
-       
         
+//    -----------------------------------------------------------------------------------
+//      Panel na kontrolki do ustawiania parametrów
+//    -----------------------------------------------------------------------------------
+               
         JPanel settingsPanel = new JPanel();
         GridBagLayout gridbag = new GridBagLayout();
     	settingsPanel.setLayout(gridbag);
     	settingsPanel.setBorder(BorderFactory.createTitledBorder("Parametry"));
     	
-        JPanel calculateTypePanel = new JPanel();
-//        calculateTypePanel.setLayout(new BoxLayout(calculateTypePanel, BoxLayout.Y_AXIS));
-        GridBagLayout gridbagCalculateType = new GridBagLayout();
-        calculateTypePanel.setLayout(gridbagCalculateType);
-        calculateTypePanel.setBorder(BorderFactory.createTitledBorder("Typ przetwarzania"));
-        
-        JPanel operationTypePanel = new JPanel();
-//      calculateTypePanel.setLayout(new BoxLayout(calculateTypePanel, BoxLayout.Y_AXIS));
-      GridBagLayout operationType = new GridBagLayout();
-      operationTypePanel.setLayout(gridbagCalculateType);
-      operationTypePanel.setBorder(BorderFactory.createTitledBorder("Operacja"));
-        
-        JPanel inputFilePanel = new JPanel();
-        GridBagLayout inputFileGridbag = new GridBagLayout();
-        inputFilePanel.setLayout(inputFileGridbag);
-        inputFilePanel.setBorder(BorderFactory.createTitledBorder("Plik wejœciowy"));
-        
-        
+//      -----------------------------------------------------------------------------------
+//      Kontrolki do ustawiania parametrów
+//    -----------------------------------------------------------------------------------        
 
     	
-    	JLabel kLabel = new JLabel("d³ugoœæ okna czasowego (n):");
-    	final JSpinner kSpinner = new JSpinner(new SpinnerNumberModel());
-    	JSlider kSlider = new JSlider(JSlider.HORIZONTAL, 0, 30, 15);
-    	kSlider.setMajorTickSpacing(10);
-    	kSlider.setMinorTickSpacing(1);
-    	kSlider.setPaintLabels(true);
-    	kSlider.setPaintLabels(true);
-    	Font font = new Font("Serif", Font.ITALIC, 10);
-    	kSlider.setFont(font);
-    	kSlider.addChangeListener(new ChangeListener() {
-			
-			public void stateChanged(ChangeEvent arg0) {
-				JSlider s = (JSlider) arg0.getSource();
-				kSpinner.setValue(s.getValue());
-				
-			}
-		});
+    	kLabel = new JLabel("d³ugoœæ okna czasowego (n):");
+    	kSpinner = new JSpinner(new SpinnerNumberModel());
+    	kSpinner.setPreferredSize(new Dimension(50, 15));
     	
-    	JLabel differenceLabel = new JLabel("d³ugoœæ przesuniêcia (k):");
-    	final JSpinner differenceSpinner = new JSpinner(new SpinnerNumberModel());
-    
-       	JSlider differenceSlider = new JSlider(JSlider.HORIZONTAL, 0, 1000, 5);
-    	differenceSlider.setMajorTickSpacing(10);
-    	differenceSlider.setMinorTickSpacing(1);
-    	differenceSlider.setPaintLabels(true);
-    	differenceSlider.setPaintLabels(true);
-    	differenceSlider.setFont(font);
-    	differenceSlider.addChangeListener(new ChangeListener() {
-			
-			public void stateChanged(ChangeEvent arg0) {
-				JSlider s = (JSlider) arg0.getSource();
-				differenceSpinner.setValue(s.getValue());
-				
-			}
-		});
+    	differenceLabel = new JLabel("d³ugoœæ przesuniêcia (k):");
+    	differenceSpinner = new JSpinner(new SpinnerNumberModel());
+    	differenceSpinner.setPreferredSize(new Dimension(50, 15));
     	
-    	JLabel startPointLabel = new JLabel("czas pocz¹tkowy (t):");
-    	final JSpinner startPointSpinner = new JSpinner(new SpinnerNumberModel());
-    	startPointSpinner.setPreferredSize(new Dimension(10, 10));
+    	startPointLabel = new JLabel("czas pocz¹tkowy (t):");
+    	startPointSpinner = new JSpinner(new SpinnerNumberModel());
+    	startPointSpinner.setPreferredSize(new Dimension(50, 15));
 
-    	JLabel pixelLabel = new JLabel("Numer piksela:");
-    	final JSpinner pixelSpinner = new JSpinner();
+    	pixelLabel = new JLabel("numer piksela:");
+    	pixelSpinner = new JSpinner();
+    	pixelSpinner.setPreferredSize(new Dimension(50, 15));
     	pixelSpinner.addChangeListener(new ChangeListener() {
 			
 			public void stateChanged(ChangeEvent e) {
@@ -178,8 +151,9 @@ public class GUI1 extends JFrame {
 		});
     	
     	
-    	JLabel timeForPixelLabel = new JLabel("Numer ramki dla mapy pixeli:");
-    	final JSpinner timeForPixelSpinner = new JSpinner();
+    	timeForPixelLabel = new JLabel("numer ramki dla mapy pixeli:");
+    	timeForPixelSpinner = new JSpinner();
+    	timeForPixelSpinner.setPreferredSize(new Dimension(50, 15));
     	timeForPixelSpinner.addChangeListener(new ChangeListener() {
 			
 			public void stateChanged(ChangeEvent e) {
@@ -188,7 +162,7 @@ public class GUI1 extends JFrame {
 			}
 		});
     	
-    	JButton createPixelMapButton = new JButton("Piksele");
+    	createPixelMapButton = new JButton("Wygeneruj mapê pikseli");
     	createPixelMapButton.addActionListener(new ActionListener(
     			) {
 			
@@ -198,8 +172,9 @@ public class GUI1 extends JFrame {
 		});
     	
     	
-    	JLabel testLabel = new JLabel("Przesuniêcie do testów:");
-    	final JSpinner testSpinner = new JSpinner();
+    	testLabel = new JLabel("przesuniêcie do testów:");
+    	testSpinner = new JSpinner();
+    	testSpinner.setPreferredSize(new Dimension(50, 15));
     	testSpinner.addChangeListener(new ChangeListener() {
 			
 			public void stateChanged(ChangeEvent e) {
@@ -208,136 +183,11 @@ public class GUI1 extends JFrame {
 			}
 		});
     	
-    	JLabel kStartLabel = new JLabel("przesuniêcie pocz¹tkowe (k startowe):");
-    	final JSpinner kStartSpinner = new JSpinner(new SpinnerNumberModel());
-    	JSlider kStartSlider = new JSlider(JSlider.HORIZONTAL, 0, 30, 15);
-    	kStartSlider.setMajorTickSpacing(10);
-    	kStartSlider.setMinorTickSpacing(1);
-    	kStartSlider.setPaintLabels(true);
-    	kStartSlider.setPaintLabels(true);
-    	kSlider.setFont(font);
-    	kSlider.addChangeListener(new ChangeListener() {
-			
-			public void stateChanged(ChangeEvent arg0) {
-				JSlider s = (JSlider) arg0.getSource();
-				kSpinner.setValue(s.getValue());
-				
-			}
-		});
-    	
-    	JRadioButton vector = new JRadioButton("Vektor");
-    	vector.setMnemonic(KeyEvent.VK_B);
-    	vector.setActionCommand("Vector");
-    	vector.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent e) {
-				pixelSpinner.setEnabled(false);
-				if(e.getStateChange()==1){
-					Main.isVector = true;
-				}
-
-				
-			}
-		});
-
-    	vector.setSelected(true);
-
-        JRadioButton pixel = new JRadioButton("Piksel");
-        pixel.setMnemonic(KeyEvent.VK_C);
-        pixel.setActionCommand("Pixel");
-		pixel.addItemListener(new ItemListener() {
-					
-					public void itemStateChanged(ItemEvent e) {
-						pixelSpinner.setEnabled(true);
-						if(e.getStateChange()==1){
-							Main.isVector = false;
-						}
-		
-						
-					}
-				});
-		JRadioButton autocorrelation = new JRadioButton("Autokorelacja");
-    	autocorrelation.setMnemonic(KeyEvent.VK_A);
-    	autocorrelation.setActionCommand("Autocorrelation");
-    	autocorrelation.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange()==1){
-//					Main.isVector = false;
-					Main.isAutocorrelation = true;
-				}				
-			}
-		});
-    	
-    	JRadioButton speed = new JRadioButton("Prêdkoœæ");
-    	speed.setMnemonic(KeyEvent.VK_A);
-    	speed.setActionCommand("Prêdkoœæ");
-    	speed.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange()==1){
-//					Main.isVector = false;
-					Main.isAutocorrelation = false;
-				}				
-			}
-		});
-
-
-    	
-        ButtonGroup groupType = new ButtonGroup();
-        groupType.add(vector);
-        groupType.add(pixel);
-        ButtonGroup groupOperationType = new ButtonGroup();
-        groupOperationType.add(autocorrelation);
-        groupOperationType.add(speed);
-        
-    	JRadioButton normalFile = new JRadioButton("normal");
-    	normalFile.setMnemonic(KeyEvent.KEY_FIRST);
-    	normalFile.setActionCommand("fileType");
-    	normalFile.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent e) {
-				Main.isManchester = false;
-				Main.isGenerate = false;
-
-				
-			}
-		});
-    	
-    	
-    	JRadioButton manchesterFile = new JRadioButton("Manchester");
-    	manchesterFile.setMnemonic(KeyEvent.KEY_LAST);
-    	manchesterFile.setActionCommand("fileType");
-    	manchesterFile.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent e) {
-				Main.isManchester = true;
-
-				
-			}
-		});
-    	manchesterFile.setSelected(true);
-    	
-    	JRadioButton generateFile = new JRadioButton("generate");
-    	generateFile.setMnemonic(KeyEvent.KEY_FIRST);
-    	generateFile.setActionCommand("fileType");
-    	generateFile.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent e) {
-				Main.isManchester = false;
-				Main.isGenerate = true;
-
-				
-			}
-		});
-    	
-    	
-    	ButtonGroup fileTypeGroup = new ButtonGroup();
-        fileTypeGroup.add(normalFile);
-        fileTypeGroup.add(manchesterFile);
-        fileTypeGroup.add(generateFile);
-        
-    	JButton calculateCorrelationButton = new JButton("Calculate");
+    	kStartLabel = new JLabel("przesuniêcie pocz¹tkowe (k startowe):");
+    	kStartSpinner = new JSpinner(new SpinnerNumberModel());
+    	kStartSpinner.setPreferredSize(new Dimension(50, 15));
+    
+    	calculateCorrelationButton = new JButton("Wygeneruj wykresy");
     	calculateCorrelationButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -359,7 +209,6 @@ public class GUI1 extends JFrame {
 				else if(Main.isVector && Main.isAutocorrelation){
 					System.out.println("vektor + autokorelacja");
 					Main.calculateForAutocorrelation();
-//					System.out.println("dla autokorelacji");
 				}
 				else if(!Main.isVector && !Main.isAutocorrelation){
 					System.out.println("pixel i predkosc");
@@ -371,7 +220,7 @@ public class GUI1 extends JFrame {
 			}
 		});
     	
-    	JButton testButton = new JButton("Test");
+    	testButton = new JButton("Test");
     	testButton.addActionListener(new ActionListener(
     			) {
 			
@@ -383,7 +232,6 @@ public class GUI1 extends JFrame {
     	
 
     	Insets insets = new Insets(5, 5, 5, 5);
-    	testSpinner.setValue(3000);
     	
 
     	gridbag.setConstraints(kLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
@@ -404,63 +252,32 @@ public class GUI1 extends JFrame {
     	gridbag.setConstraints(pixelSpinner, new GridBagConstraints(1, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(timeForPixelSpinner, new GridBagConstraints(1, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(testSpinner, new GridBagConstraints(1, 8, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	
-    	
-    	
-    	kLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
-    	differenceLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
-    	startPointLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
-    	
-
-    	
+    	   	
     
     	kSpinner.addChangeListener(new ChangeListener() {      
     		  public void stateChanged(ChangeEvent e) {
-//    		    System.out.println("k spinner");
-    		    Main.dlugosc_okna_czasowego_n = (Integer) kSpinner.getValue();
-    		    
+    		    Main.dlugosc_okna_czasowego_n = (Integer) kSpinner.getValue();		    
     		  }
     		});
     	
     	differenceSpinner.addChangeListener(new ChangeListener() {      
   		  public void stateChanged(ChangeEvent e) {
-//  		    System.out.println("difference spinner");
   		    Main.dlugosc_przesuniecia_k = (Integer) differenceSpinner.getValue();
   		  }
   		});
     	
     	kStartSpinner.addChangeListener(new ChangeListener() {      
     		  public void stateChanged(ChangeEvent e) {
-//    		    System.out.println("difference spinner");
     		    Main.k_poczatkowe = (Integer) kStartSpinner.getValue();
     		  }
     		});
     	
     	startPointSpinner.addChangeListener(new ChangeListener() {      
   		  public void stateChanged(ChangeEvent e) {
-//  		    System.out.println("start point spinner");
   		    Main.czas_poczatkowy_t = (Integer) startPointSpinner.getValue();
   		  }
   		});
     	
-    	JButton filesButton = new JButton("Wybierz plik");
-    	filesButton.addActionListener(new ActionListener(
-    			) {
-			
-			public void actionPerformed(ActionEvent e) {		
-				JFileChooser fileChooser = new JFileChooser();
-		    	fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		    	int result = fileChooser.showOpenDialog(GUI1.this);
-		    	if (result == JFileChooser.APPROVE_OPTION) {
-		    	    Main.file = fileChooser.getSelectedFile();
-		    	}
-			}
-		});
-    	
-    	
-
-        
-
     	
     	settingsPanel.add(kLabel);
     	settingsPanel.add(kSpinner);
@@ -477,18 +294,180 @@ public class GUI1 extends JFrame {
     	settingsPanel.add(timeForPixelLabel);
     	settingsPanel.add(timeForPixelSpinner);
     	settingsPanel.add(createPixelMapButton);
-//    	settingsPanel.add(vector);
-//    	settingsPanel.add(pixel);
-//    	settingsPanel.add(autocorrelation);
     	settingsPanel.add(calculateCorrelationButton);
     	settingsPanel.add(testButton);
     	
-    	calculateTypePanel.add(vector);
-    	calculateTypePanel.add(pixel);
+//      -----------------------------------------------------------------------------------
+//      wybór typu przetwarzania (vector / pixel)
+//    -----------------------------------------------------------------------------------
+    	
+        JPanel calculateTypePanel = new JPanel();
+        GridBagLayout gridbagCalculateType = new GridBagLayout();
+        calculateTypePanel.setLayout(gridbagCalculateType);
+        calculateTypePanel.setBorder(BorderFactory.createTitledBorder("Typ przetwarzania"));
+        
+        JRadioButton vector = new JRadioButton("Vektor");
+    	vector.setMnemonic(KeyEvent.VK_B);
+    	vector.setActionCommand("Vector");
+    	vector.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				pixelSpinner.setEnabled(false);
+				if(e.getStateChange()==1){
+					Main.isVector = true;
+					if(Main.isAutocorrelation){
+						addComponentsForAutocorelationForVector();
+					}
+					else{
+						addComponentForSpeedForVector();
+					}
+				}				
+			}
+		});
+
+    	vector.setSelected(true);
+
+        JRadioButton pixel = new JRadioButton("Piksel");
+        pixel.setMnemonic(KeyEvent.VK_C);
+        pixel.setActionCommand("Pixel");
+		pixel.addItemListener(new ItemListener() {
+					
+					public void itemStateChanged(ItemEvent e) {
+						pixelSpinner.setEnabled(true);
+						if(e.getStateChange()==1){
+							Main.isVector = false;
+							if(Main.isAutocorrelation){
+								addComponentsForAutocorelationForPixel();
+							}
+							else{
+								addComponentForSpeedForPixel();
+							}
+						}						
+					}
+				});
+		
+	   ButtonGroup groupType = new ButtonGroup();
+	   groupType.add(vector);
+	   groupType.add(pixel);
+	   
+   	   calculateTypePanel.add(vector);
+   	   calculateTypePanel.add(pixel);
+        
+//      -----------------------------------------------------------------------------------
+//      panel na wybór operacji (autokorelacja / prêdkoœæ )
+//    -----------------------------------------------------------------------------------
+        
+        JPanel operationTypePanel = new JPanel();
+        operationTypePanel.setLayout(gridbagCalculateType);
+        operationTypePanel.setBorder(BorderFactory.createTitledBorder("Operacja"));
+        
+        JRadioButton autocorrelation = new JRadioButton("Autokorelacja");
+    	autocorrelation.setMnemonic(KeyEvent.VK_A);
+    	autocorrelation.setActionCommand("Autocorrelation");
+    	autocorrelation.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==1){
+					Main.isAutocorrelation = true;
+					if(Main.isVector){
+						addComponentsForAutocorelationForVector();
+					}
+					else{
+						addComponentsForAutocorelationForPixel();
+					}
+				}				
+			}
+		});
+    	autocorrelation.setSelected(true);
+    	
+    	JRadioButton speed = new JRadioButton("Prêdkoœæ");
+    	speed.setMnemonic(KeyEvent.VK_A);
+    	speed.setActionCommand("Prêdkoœæ");
+    	speed.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==1){
+					Main.isAutocorrelation = false;
+					if(Main.isVector){
+						addComponentForSpeedForVector();
+					}
+					else{
+						addComponentForSpeedForPixel();
+					}
+				}				
+			}
+		});
+    	
+        ButtonGroup groupOperationType = new ButtonGroup();
+        groupOperationType.add(autocorrelation);
+        groupOperationType.add(speed);
+        
     	operationTypePanel.add(autocorrelation);
     	operationTypePanel.add(speed);
+
+        
+//      -----------------------------------------------------------------------------------
+//      panel na wybór pliku
+//    -----------------------------------------------------------------------------------
+        
+        JPanel inputFilePanel = new JPanel();
+        GridBagLayout inputFileGridbag = new GridBagLayout();
+        inputFilePanel.setLayout(inputFileGridbag);
+        inputFilePanel.setBorder(BorderFactory.createTitledBorder("Plik wejœciowy"));
+        
+        JRadioButton normalFile = new JRadioButton("normal");
+    	normalFile.setMnemonic(KeyEvent.KEY_FIRST);
+    	normalFile.setActionCommand("fileType");
+    	normalFile.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				Main.isManchester = false;
+				Main.isGenerate = false;				
+			}
+		});   	
     	
-    	inputFileGridbag.setConstraints(normalFile, new GridBagConstraints(0, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	JRadioButton manchesterFile = new JRadioButton("Manchester");
+    	manchesterFile.setMnemonic(KeyEvent.KEY_LAST);
+    	manchesterFile.setActionCommand("fileType");
+    	manchesterFile.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				Main.isManchester = true;			
+			}
+		});
+    	manchesterFile.setSelected(true);
+    	
+    	JRadioButton generateFile = new JRadioButton("generate");
+    	generateFile.setMnemonic(KeyEvent.KEY_FIRST);
+    	generateFile.setActionCommand("fileType");
+    	generateFile.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				Main.isManchester = false;
+				Main.isGenerate = true;				
+			}
+		});    	
+    	
+    	ButtonGroup fileTypeGroup = new ButtonGroup();
+        fileTypeGroup.add(normalFile);
+        fileTypeGroup.add(manchesterFile);
+        fileTypeGroup.add(generateFile);
+        
+    	JButton filesButton = new JButton("Wybierz plik");
+    	filesButton.addActionListener(new ActionListener(
+    			) {
+			
+			public void actionPerformed(ActionEvent e) {		
+				JFileChooser fileChooser = new JFileChooser();
+		    	fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		    	int result = fileChooser.showOpenDialog(GUI1.this);
+		    	if (result == JFileChooser.APPROVE_OPTION) {
+		    	    Main.file = fileChooser.getSelectedFile();
+		    	}
+			}
+		});
+    	
+       	inputFileGridbag.setConstraints(normalFile, new GridBagConstraints(0, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(manchesterFile, new GridBagConstraints(1, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(generateFile, new GridBagConstraints(2, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(filesButton, new GridBagConstraints(0, 1, 3, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
@@ -497,19 +476,9 @@ public class GUI1 extends JFrame {
     	inputFilePanel.add(manchesterFile);
     	inputFilePanel.add(generateFile);
     	inputFilePanel.add(filesButton);
-    	
-    	
         
-    	JPanel filesPanel = new JPanel();
-    	filesPanel.setLayout(new GridLayout(2,2));
-//    	filesPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-    	
-    	JPanel dataPanel = new JPanel();
-//    	dataPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-    	
-    	JPanel timePanel = new JPanel();
-//    	timePanel.setBorder(BorderFactory.createLineBorder(Color.black));
-        
+//-----------------------------------------------------------------------------------------------------------------
+    	       
     	GridBagLayout configurationGridbag = new GridBagLayout();
     	configurationPanel.setLayout(configurationGridbag);
     	configurationGridbag.setConstraints(calculateTypePanel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
@@ -517,50 +486,23 @@ public class GUI1 extends JFrame {
     	configurationGridbag.setConstraints(inputFilePanel, new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	configurationGridbag.setConstraints(settingsPanel, new GridBagConstraints(0, 3, 1, 1, 1, 3, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	
-//    	configurationPanel.setLayout(new BoxLayout(configurationPanel, BoxLayout.Y_AXIS));
-//    	configurationPanel.add(Box.createVerticalGlue());
-//    	configurationPanel.add(vector);
-//        configurationPanel.add(pixel);
-//        configurationPanel.add(autocorrelation);
         configurationPanel.add(calculateTypePanel);
         configurationPanel.add(inputFilePanel);
         configurationPanel.add(settingsPanel);
         configurationPanel.add(operationTypePanel);
-//        configurationPanel.add(calculateCorrelationButton);
-//        configurationPanel.add(filesButton);
-//        configurationPanel.add(testButton);
 
-//        configurationPanel.add(normalFile);
-//        configurationPanel.add(manchesterFile);
-     
-//        resultPanel.add(tabbedPanel);
-//        resultPanel.setSize(new Dimension(1000,700));
-        JPanel allPanel = new JPanel();
+        allPanel = new JPanel();
         resultPanel.setLayout(new BorderLayout());
         resultPanel.add(tabbedPanel, BorderLayout.CENTER);
-        tabbedPanel.addTab("Przebieg", chartDataPanel);
-        tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
-        tabbedPanel.addTab("Test", chartTestPanel);
-        tabbedPanel.addTab("Autokorelacja", chartCorrelationInTimePanel);
-        tabbedPanel.addTab("Dane statystyczne", chartStatisticPanel);
-        tabbedPanel.addTab("Wszystko", allPanel);
-        tabbedPanel.addTab("Pixel", pixelPanel);
 
         FlowLayout bl = new FlowLayout();
         pixelPanel.setLayout(bl);
-        
-//        squarePanel.setBackground(Color.RED);
-//        squarePanel.setMaximumSize(new Dimension((int)pixelPanel.getMaximumSize().getHeight()/2, (int)pixelPanel.getMaximumSize().getHeight()/2));
-//        squarePanel.setMinimumSize(new Dimension((int)pixelPanel.getMaximumSize().getHeight()/2, (int)pixelPanel.getMaximumSize().getHeight()/2));
-//       squarePanel.setPreferredSize(new Dimension((int)pixelPanel.getMaximumSize().getHeight()/2, (int)pixelPanel.getMaximumSize().getHeight()/2));
+     
         squarePanel.setMaximumSize(new Dimension(670,670));
         squarePanel.setMinimumSize(new Dimension(670,670));
         squarePanel.setPreferredSize(new Dimension(670,670));
 
-        pixelPanel.add(squarePanel);
-
-        
-        
+        pixelPanel.add(squarePanel);      
         
         allPanel.setLayout(new BorderLayout());
         JPanel chartButtonPanel = new JPanel();
@@ -630,10 +572,137 @@ public class GUI1 extends JFrame {
         mainPanel.add(resultPanel, BorderLayout.CENTER);
         
         this.add(mainPanel);
+        
+        
+        kLabel.setVisible(true);
+    	kSpinner.setVisible(true);
+    	kStartLabel.setVisible(true);
+    	kStartSpinner.setVisible(true);
+        differenceLabel.setVisible(true);
+        differenceSpinner.setVisible(true);
+        startPointLabel.setVisible(true);
+        startPointSpinner.setVisible(true);
+        calculateCorrelationButton.setVisible(true);       
+        testLabel.setVisible(true);      
+        testButton.setVisible(true);
+        testSpinner.setVisible(true);
+        
+        pixelLabel.setVisible(false);
+        pixelSpinner.setVisible(false);
+        timeForPixelLabel.setVisible(false);
+        timeForPixelSpinner.setVisible(false);
+        createPixelMapButton.setVisible(false);
     }
     
-    public void addElementsForAutocorelationForPixel(){
+    
+    public void addComponentsForAutocorelationForPixel(){
+    	kLabel.setVisible(true);
+    	kSpinner.setVisible(true);
+    	kStartLabel.setVisible(true);
+    	kStartSpinner.setVisible(true);
+        differenceLabel.setVisible(true);
+        differenceSpinner.setVisible(true);
+        startPointLabel.setVisible(true);
+        startPointSpinner.setVisible(true);
+        pixelLabel.setVisible(true);
+        pixelSpinner.setVisible(true);
+        timeForPixelLabel.setVisible(true);
+        timeForPixelSpinner.setVisible(true);
+        calculateCorrelationButton.setVisible(true);
+        createPixelMapButton.setVisible(true);       
+        testLabel.setVisible(true);      
+        testButton.setVisible(true);
+        testSpinner.setVisible(true);
+        
+        tabbedPanel.removeAll();
+        tabbedPanel.addTab("Przebieg", chartDataPanel);
+        tabbedPanel.addTab("Pixel", pixelPanel);
+        tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
+        tabbedPanel.addTab("Autokorelacja", chartCorrelationInTimePanel);
+        tabbedPanel.addTab("Dane statystyczne", chartStatisticPanel);
+        tabbedPanel.addTab("Wszystko", allPanel);
+    }
+    
+    public void addComponentsForAutocorelationForVector(){
+    	kLabel.setVisible(true);
+    	kSpinner.setVisible(true);
+    	kStartLabel.setVisible(true);
+    	kStartSpinner.setVisible(true);
+        differenceLabel.setVisible(true);
+        differenceSpinner.setVisible(true);
+        startPointLabel.setVisible(true);
+        startPointSpinner.setVisible(true);
+        calculateCorrelationButton.setVisible(true);       
+        testLabel.setVisible(true);      
+        testButton.setVisible(true);
+        testSpinner.setVisible(true);
+        
+        pixelLabel.setVisible(false);
+        pixelSpinner.setVisible(false);
+        timeForPixelLabel.setVisible(false);
+        timeForPixelSpinner.setVisible(false);
+        createPixelMapButton.setVisible(false);
+        
+        tabbedPanel.removeAll();
+        tabbedPanel.addTab("Przebieg", chartDataPanel);
+        tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
+        tabbedPanel.addTab("Autokorelacja", chartCorrelationInTimePanel);
+        tabbedPanel.addTab("Dane statystyczne", chartStatisticPanel);
+        tabbedPanel.addTab("Wszystko", allPanel);
+        
+        
+    }
+    
+    public void addComponentForSpeedForPixel(){
+    	kLabel.setVisible(true);
+    	kSpinner.setVisible(true);
+        differenceLabel.setVisible(true);
+        differenceSpinner.setVisible(true);
+        startPointLabel.setVisible(true);
+        startPointSpinner.setVisible(true);
+        pixelLabel.setVisible(true);
+        pixelSpinner.setVisible(true);
+        calculateCorrelationButton.setVisible(true);       
+        testLabel.setVisible(true);      
+        testButton.setVisible(true);
+        testSpinner.setVisible(true);
+        
+        timeForPixelLabel.setVisible(false);
+        timeForPixelSpinner.setVisible(false);
+        createPixelMapButton.setVisible(false); 
+    	kStartLabel.setVisible(false);
+    	kStartSpinner.setVisible(false);
     	
+        tabbedPanel.removeAll();
+        tabbedPanel.addTab("Przebieg", chartDataPanel);
+        tabbedPanel.addTab("Test", chartTestPanel);
+        tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
+    }
+    
+    public void addComponentForSpeedForVector(){
+    	kLabel.setVisible(true);
+    	kSpinner.setVisible(true);
+        differenceLabel.setVisible(true);
+        differenceSpinner.setVisible(true);
+        startPointLabel.setVisible(true);
+        startPointSpinner.setVisible(true);
+        calculateCorrelationButton.setVisible(true);       
+        testLabel.setVisible(true);      
+        testButton.setVisible(true);
+        testSpinner.setVisible(true);
+        
+        pixelLabel.setVisible(false);
+        pixelSpinner.setVisible(false);
+        timeForPixelLabel.setVisible(false);
+        timeForPixelSpinner.setVisible(false);
+        createPixelMapButton.setVisible(false); 
+    	kStartLabel.setVisible(false);
+    	kStartSpinner.setVisible(false);
+    	
+        tabbedPanel.removeAll();
+        tabbedPanel.addTab("Przebieg", chartDataPanel);
+        tabbedPanel.addTab("Test", chartTestPanel);
+        tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
     }
     public void fileChooser(){
     	 	JFrame.setDefaultLookAndFeelDecorated(true);
@@ -644,18 +713,7 @@ public class GUI1 extends JFrame {
     	    
     	    frame.setLayout(new FlowLayout());
     	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//    	    JButton button = new JButton("Select File");
-//    	    button.addActionListener(new ActionListener() {
-//    	      public void actionPerformed(ActionEvent ae) {
-//    	        JFileChooser fileChooser = new JFileChooser();
-//    	        int returnValue = fileChooser.showOpenDialog(null);
-//    	        if (returnValue == JFileChooser.APPROVE_OPTION) {
-//    	          File selectedFile = fileChooser.getSelectedFile();
-////    	          System.out.println(selectedFile.getName());
-//    	        }
-//    	      }
-//    	    });
-//    	    frame.add(button);
+
     	    frame.pack();
     	    frame.setVisible(true);
     }
