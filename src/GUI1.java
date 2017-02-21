@@ -8,7 +8,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -17,7 +16,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -32,6 +30,7 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -46,7 +45,8 @@ public class GUI1 extends JFrame {
     public static JPanel chartCorrelationInTimePanel = new JPanel();
     public static JPanel chartStatisticPanel = new JPanel();
     public static JPanel chartAllPanel = new JPanel();
-//    public static JPanel pixelPanel = new JPanel();
+    public static JPanel pixelPanel = new JPanel();
+    public static JPanel squarePanel = new JPanel();
     public static JCheckBox avg = new JCheckBox("œrednia");
     public static JCheckBox median = new JCheckBox("mediana");
     public static  JCheckBox std = new JCheckBox("ochylenie standardowe");
@@ -113,6 +113,12 @@ public class GUI1 extends JFrame {
         calculateTypePanel.setLayout(gridbagCalculateType);
         calculateTypePanel.setBorder(BorderFactory.createTitledBorder("Typ przetwarzania"));
         
+        JPanel operationTypePanel = new JPanel();
+//      calculateTypePanel.setLayout(new BoxLayout(calculateTypePanel, BoxLayout.Y_AXIS));
+      GridBagLayout operationType = new GridBagLayout();
+      operationTypePanel.setLayout(gridbagCalculateType);
+      operationTypePanel.setBorder(BorderFactory.createTitledBorder("Operacja"));
+        
         JPanel inputFilePanel = new JPanel();
         GridBagLayout inputFileGridbag = new GridBagLayout();
         inputFilePanel.setLayout(inputFileGridbag);
@@ -170,6 +176,27 @@ public class GUI1 extends JFrame {
 				
 			}
 		});
+    	
+    	
+    	JLabel timeForPixelLabel = new JLabel("Numer ramki dla mapy pixeli:");
+    	final JSpinner timeForPixelSpinner = new JSpinner();
+    	timeForPixelSpinner.addChangeListener(new ChangeListener() {
+			
+			public void stateChanged(ChangeEvent e) {
+				Main.timeForPixelMap = (Integer) timeForPixelSpinner.getValue();
+				
+			}
+		});
+    	
+    	JButton createPixelMapButton = new JButton("Piksele");
+    	createPixelMapButton.addActionListener(new ActionListener(
+    			) {
+			
+			public void actionPerformed(ActionEvent e) {
+				Main.createPixelMap();
+			}
+		});
+    	
     	
     	JLabel testLabel = new JLabel("Przesuniêcie do testów:");
     	final JSpinner testSpinner = new JSpinner();
@@ -235,20 +262,34 @@ public class GUI1 extends JFrame {
     	autocorrelation.addItemListener(new ItemListener() {
 			
 			public void itemStateChanged(ItemEvent e) {
-				pixelSpinner.setEnabled(false);
 				if(e.getStateChange()==1){
-					Main.isVector = false;
+//					Main.isVector = false;
 					Main.isAutocorrelation = true;
+				}				
+			}
+		});
+    	
+    	JRadioButton speed = new JRadioButton("Prêdkoœæ");
+    	speed.setMnemonic(KeyEvent.VK_A);
+    	speed.setActionCommand("Prêdkoœæ");
+    	speed.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==1){
+//					Main.isVector = false;
+					Main.isAutocorrelation = false;
 				}				
 			}
 		});
 
 
     	
-        ButtonGroup group = new ButtonGroup();
-        group.add(vector);
-        group.add(pixel);
-        group.add(autocorrelation);
+        ButtonGroup groupType = new ButtonGroup();
+        groupType.add(vector);
+        groupType.add(pixel);
+        ButtonGroup groupOperationType = new ButtonGroup();
+        groupOperationType.add(autocorrelation);
+        groupOperationType.add(speed);
         
     	JRadioButton normalFile = new JRadioButton("normal");
     	normalFile.setMnemonic(KeyEvent.KEY_FIRST);
@@ -310,17 +351,23 @@ public class GUI1 extends JFrame {
 				chartCorrelationInTimePanel.removeAll();
 				chartStatisticPanel.removeAll();
 				chartAllPanel.removeAll();
-				if(Main.isVector){
+				pixelPanel.removeAll();
+				if(Main.isVector && !Main.isAutocorrelation){
+					System.out.println("Vector + predkosc");
 					Main.calculateForVector();
 				}
-				else if(Main.isAutocorrelation){
-//					System.out.println("aaaaabbbbbbbb");
+				else if(Main.isVector && Main.isAutocorrelation){
+					System.out.println("vektor + autokorelacja");
 					Main.calculateForAutocorrelation();
 //					System.out.println("dla autokorelacji");
 				}
-				else{
+				else if(!Main.isVector && !Main.isAutocorrelation){
+					System.out.println("pixel i predkosc");
 					Main.calculateForPixel();
 				}			
+				else{
+					Main.calculateAutocorrelationForPixel();
+				}
 			}
 		});
     	
@@ -344,16 +391,19 @@ public class GUI1 extends JFrame {
     	gridbag.setConstraints(differenceLabel, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(startPointLabel, new GridBagConstraints(0, 3, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(pixelLabel, new GridBagConstraints(0, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(testLabel, new GridBagConstraints(0, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(calculateCorrelationButton, new GridBagConstraints(0, 5, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(testButton, new GridBagConstraints(0, 7, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(timeForPixelLabel, new GridBagConstraints(0, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(createPixelMapButton, new GridBagConstraints(0, 7, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(testLabel, new GridBagConstraints(0, 8, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(testButton, new GridBagConstraints(0, 9, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	
     	gridbag.setConstraints(kSpinner, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(kStartSpinner, new GridBagConstraints(1, 2, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(differenceSpinner, new GridBagConstraints(1, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(startPointSpinner, new GridBagConstraints(1, 3, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(pixelSpinner, new GridBagConstraints(1, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(testSpinner, new GridBagConstraints(1, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(timeForPixelSpinner, new GridBagConstraints(1, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(testSpinner, new GridBagConstraints(1, 8, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	
     	
     	
@@ -424,6 +474,9 @@ public class GUI1 extends JFrame {
     	settingsPanel.add(pixelSpinner);
     	settingsPanel.add(testLabel);
     	settingsPanel.add(testSpinner);
+    	settingsPanel.add(timeForPixelLabel);
+    	settingsPanel.add(timeForPixelSpinner);
+    	settingsPanel.add(createPixelMapButton);
 //    	settingsPanel.add(vector);
 //    	settingsPanel.add(pixel);
 //    	settingsPanel.add(autocorrelation);
@@ -432,7 +485,8 @@ public class GUI1 extends JFrame {
     	
     	calculateTypePanel.add(vector);
     	calculateTypePanel.add(pixel);
-    	calculateTypePanel.add(autocorrelation);
+    	operationTypePanel.add(autocorrelation);
+    	operationTypePanel.add(speed);
     	
     	inputFileGridbag.setConstraints(normalFile, new GridBagConstraints(0, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(manchesterFile, new GridBagConstraints(1, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
@@ -459,8 +513,9 @@ public class GUI1 extends JFrame {
     	GridBagLayout configurationGridbag = new GridBagLayout();
     	configurationPanel.setLayout(configurationGridbag);
     	configurationGridbag.setConstraints(calculateTypePanel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	configurationGridbag.setConstraints(inputFilePanel, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	configurationGridbag.setConstraints(settingsPanel, new GridBagConstraints(0, 2, 1, 1, 1, 3, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	configurationGridbag.setConstraints(operationTypePanel, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	configurationGridbag.setConstraints(inputFilePanel, new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	configurationGridbag.setConstraints(settingsPanel, new GridBagConstraints(0, 3, 1, 1, 1, 3, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	
 //    	configurationPanel.setLayout(new BoxLayout(configurationPanel, BoxLayout.Y_AXIS));
 //    	configurationPanel.add(Box.createVerticalGlue());
@@ -470,6 +525,7 @@ public class GUI1 extends JFrame {
         configurationPanel.add(calculateTypePanel);
         configurationPanel.add(inputFilePanel);
         configurationPanel.add(settingsPanel);
+        configurationPanel.add(operationTypePanel);
 //        configurationPanel.add(calculateCorrelationButton);
 //        configurationPanel.add(filesButton);
 //        configurationPanel.add(testButton);
@@ -488,6 +544,23 @@ public class GUI1 extends JFrame {
         tabbedPanel.addTab("Autokorelacja", chartCorrelationInTimePanel);
         tabbedPanel.addTab("Dane statystyczne", chartStatisticPanel);
         tabbedPanel.addTab("Wszystko", allPanel);
+        tabbedPanel.addTab("Pixel", pixelPanel);
+
+        FlowLayout bl = new FlowLayout();
+        pixelPanel.setLayout(bl);
+        
+//        squarePanel.setBackground(Color.RED);
+//        squarePanel.setMaximumSize(new Dimension((int)pixelPanel.getMaximumSize().getHeight()/2, (int)pixelPanel.getMaximumSize().getHeight()/2));
+//        squarePanel.setMinimumSize(new Dimension((int)pixelPanel.getMaximumSize().getHeight()/2, (int)pixelPanel.getMaximumSize().getHeight()/2));
+//       squarePanel.setPreferredSize(new Dimension((int)pixelPanel.getMaximumSize().getHeight()/2, (int)pixelPanel.getMaximumSize().getHeight()/2));
+        squarePanel.setMaximumSize(new Dimension(670,670));
+        squarePanel.setMinimumSize(new Dimension(670,670));
+        squarePanel.setPreferredSize(new Dimension(670,670));
+
+        pixelPanel.add(squarePanel);
+
+        
+        
         
         allPanel.setLayout(new BorderLayout());
         JPanel chartButtonPanel = new JPanel();
@@ -559,6 +632,9 @@ public class GUI1 extends JFrame {
         this.add(mainPanel);
     }
     
+    public void addElementsForAutocorelationForPixel(){
+    	
+    }
     public void fileChooser(){
     	 	JFrame.setDefaultLookAndFeelDecorated(true);
     	    JDialog.setDefaultLookAndFeelDecorated(true);

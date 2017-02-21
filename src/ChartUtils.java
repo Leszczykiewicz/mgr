@@ -115,6 +115,20 @@ public class ChartUtils
       panel.add(chartPanel, BorderLayout.CENTER);
    }
    
+   public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, float[] framesA) throws IOException
+   {
+      JFreeChart lineChart = ChartFactory.createXYLineChart(
+         chartTitle,
+         xName,yName,
+         createDataset(framesA),
+         PlotOrientation.VERTICAL,
+         true,true,false);
+         
+      ChartPanel chartPanel = new ChartPanel( lineChart );
+      panel.setLayout(new BorderLayout());
+      panel.add(chartPanel, BorderLayout.CENTER);
+//      ChartUtilities.saveChartAsJPEG(new File("wyniki/przebieg_" + Main.dlugosc_okna_czasowego_n+"_"+Main.file + ".jpg"), lineChart, 1120, 720);
+   }
    
    public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, float[] framesA, float[] framesB) throws IOException
    {
@@ -291,6 +305,22 @@ public class ChartUtils
 	   XYSeriesCollection dataset = new XYSeriesCollection();
 	   dataset.addSeries(seriesA);
 	   dataset.addSeries(seriesB);
+
+      return dataset;
+   }
+   
+   private XYSeriesCollection createDataset(float[] framesA)
+   {
+	   XYSeries seriesA = new XYSeries("P³aszczyzna A");
+	   int i = 0;
+	   for(float f : framesA){
+		   seriesA.add(i, f);
+		   i++;
+	   }
+	  
+	   
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+	   dataset.addSeries(seriesA);
 
       return dataset;
    }
