@@ -1,12 +1,9 @@
 import java.awt.BorderLayout;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
@@ -14,7 +11,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -23,6 +19,7 @@ public class ChartUtils
 {
 	public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, Statistics[] statistics, int[] correlation, ArrayList<Frame> frames) throws FileNotFoundException, IOException
 	   {
+		System.out.println("ChartUtils");
 	      JFreeChart lineChart = ChartFactory.createXYLineChart(
 	         chartTitle,
 	         xName,yName,
@@ -33,7 +30,6 @@ public class ChartUtils
 	      ChartPanel chartPanel = new ChartPanel( lineChart );
 	      panel.setLayout(new BorderLayout());
 	      panel.add(chartPanel, BorderLayout.CENTER);
-//	      panel.add(chartPanel);
 //	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
 	      
 	   }
@@ -51,7 +47,7 @@ public class ChartUtils
 	      panel.setLayout(new BorderLayout());
 	      panel.add(chartPanel, BorderLayout.CENTER);
 //	      panel.add(chartPanel);
-	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
+//	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
 	      
 	   }
 	
@@ -83,7 +79,7 @@ public class ChartUtils
       ChartPanel chartPanel = new ChartPanel( lineChart );
       panel.setLayout(new BorderLayout());
       panel.add(chartPanel, BorderLayout.CENTER);
-      ChartUtilities.saveChartAsJPEG(new File("wyniki/przebieg_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
+//      ChartUtilities.saveChartAsJPEG(new File("wyniki/przebieg_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
    }
    
    public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, int[] correlation) throws IOException
@@ -98,7 +94,7 @@ public class ChartUtils
       ChartPanel chartPanel = new ChartPanel( lineChart );
       panel.setLayout(new BorderLayout());
       panel.add(chartPanel, BorderLayout.CENTER);
-      ChartUtilities.saveChartAsJPEG(new File("wyniki/autokorelacja_" +Main.dlugosc_okna_czasowego_n+ "_"+ Main.file.getName()+".jpg"), lineChart, 1120, 720);
+//      ChartUtilities.saveChartAsJPEG(new File("wyniki/autokorelacja_" +Main.dlugosc_okna_czasowego_n+ "_"+ Main.file.getName()+".jpg"), lineChart, 1120, 720);
       
    }
    public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, CorrelationObject[] correlation)
@@ -218,6 +214,7 @@ public class ChartUtils
    
    private XYSeriesCollection createDataset(Statistics[] statistics, int[] correlation, ArrayList<Frame> frames)
    {
+	   System.out.println("CreateDataset");
 	   XYSeries seriesA = new XYSeries("œrednia");
 	   XYSeries seriesB = new XYSeries("mediana");
 	   XYSeries seriesC = new XYSeries("odchylenie standardowe");
@@ -248,7 +245,9 @@ public class ChartUtils
 	  
 	   XYSeriesCollection dataset = new XYSeriesCollection();
 
-	      
+	   if(GUI1.measurement.isSelected()){
+		   dataset.addSeries(seriesF);
+	   } 
 	   if(GUI1.avg.isSelected()){
 		   dataset.addSeries(seriesA);
 	   }
@@ -264,9 +263,7 @@ public class ChartUtils
 	   if(GUI1.autocorrelationButton.isSelected()){
 		   dataset.addSeries(seriesE);
 	   }
-	   if(GUI1.measurement.isSelected()){
-		   dataset.addSeries(seriesF);
-	   }
+
 
       return dataset;
    }

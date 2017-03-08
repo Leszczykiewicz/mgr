@@ -23,6 +23,11 @@ public class FileUtils {
 		for(String line : file.split("\n")){
 			lineCounter++;
 				if(!line.trim().matches("##EOF")){
+					
+					if(line.trim().matches("##.*")){
+//						System.out.println("do pominiêcia");
+					}
+					else{
 	
 			        	String[] n = line.split(" ");
 			        	for(String k:n){
@@ -52,6 +57,7 @@ public class FileUtils {
 			        }				
 				}
 				}
+		}
 		return result;
 
 		
@@ -66,6 +72,11 @@ public class FileUtils {
 		for(String line : file.split("\n")){
 			lineCounter++;
 				if(!line.trim().matches("##EOF")){
+						
+						if(line.trim().matches("##.*")){
+//							System.out.println("do pominiêcia");
+						}
+						else{
 		        	
 			        	frame = new Frame();
 			        	frame.setTime(lineCounter);
@@ -93,6 +104,7 @@ public class FileUtils {
 			        	C = new float[size];
 			        }
 				}
+		}
 //		}
 		return result;
 	}
@@ -127,6 +139,9 @@ public class FileUtils {
 							frame = new Frame();
 							frame.setTime(lineCounter);
 						}
+						else if(line.trim().matches("## .*")){
+							//do nothing ;P
+						}
 						else{
 
 
@@ -158,6 +173,7 @@ public class FileUtils {
 	}
 	
 	public String loadFile(File file){
+		System.out.println("plik:" + file);
 		FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);

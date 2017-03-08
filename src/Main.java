@@ -30,6 +30,7 @@ public class Main {
 	public static boolean isVector = true;
 	public static boolean isAutocorrelation = false;
 	public static boolean isManchester = true;
+	public static boolean isPixel = false;
 	public static boolean isGenerate = false;
 	public static File file;
 	public static ArrayList<CorrelationObject[]> correlationForTest;
@@ -80,7 +81,7 @@ public class Main {
 		float[] first_values;
 		if(przesuniecie_do_testow > framesA.size()-dlugosc_okna_czasowego_n-dlugosc_przesuniecia_k-1)
 		{
-			System.out.println("if");
+//			System.out.println("if");
 			 correlations = new CorrelationObject[framesA.size()-przesuniecie_do_testow-1];
 			 second_values = new float[framesA.size()-dlugosc_okna_czasowego_n-dlugosc_przesuniecia_k-1];
 			 first_values = new float[framesA.size()-dlugosc_okna_czasowego_n-dlugosc_przesuniecia_k-1];
@@ -105,9 +106,9 @@ public class Main {
 		}
 		id = 0;
 		for(int j=0; j<dlugosc_przesuniecia_k; j++){
-			System.out.println(j);
+//			System.out.println(j);
 			if(j> framesA.size()-dlugosc_okna_czasowego_n-dlugosc_przesuniecia_k-1){
-				 System.out.println("Break");
+//				 System.out.println("Break");
 				 break;
 			 }
 			
@@ -115,38 +116,38 @@ public class Main {
 			int id2 = 0;
 			for(int i = przesuniecie_do_testow+j; i<przesuniecie_do_testow+j+dlugosc_okna_czasowego_n; i++){
 				if(i> framesA.size()-dlugosc_okna_czasowego_n-dlugosc_przesuniecia_k-1){
-					 System.out.println("Break");
+//					 System.out.println("Break");
 					 break;
 				 }
 				second_values[id2] = framesA.get(i).getAvgC();
 				id2++;
 			}
-			System.out.println(j);
-			System.out.println("first: ");
-			for(float f: first_values){
-				System.out.println(f);
-			}
-			
-			System.out.println("second: ");
-			for(float f: second_values){
-				System.out.println(f);
-			}
+//			System.out.println(j);
+//			System.out.println("first: ");
+//			for(float f: first_values){
+//				System.out.println(f);
+//			}
+//			
+//			System.out.println("second: ");
+//			for(float f: second_values){
+//				System.out.println(f);
+//			}
 			
 			
 			PearsonCorrelation pc = new PearsonCorrelation(first_values, second_values);
-	    	System.out.println("korelacja: "+pc.correlation); 	    		    	  
+//	    	System.out.println("korelacja: "+pc.correlation); 	    		    	  
 			correlations[j] = new CorrelationObject(pc.correlation, j);
 //			System.out.println(correlations[j].value);
 		
 		}
 //		czas_poczatkowy_t = przesuniecie_do_testow;
 //  	  	CorrelationObject[] correlation_for_t = calculateAutocorrelation(framesA);
-		System.out.println("d³ugoœæ correlation: "+correlations.length);
+//		System.out.println("d³ugoœæ correlation: "+correlations.length);
 		float[] correlationValues = new float[correlations.length];
 		int i=0;
 		
 		for(CorrelationObject c : correlations){
-			System.out.println(c.value);
+//			System.out.println(c.value);
 			correlationValues[i] = c.value;
 			i++;
 		}
@@ -159,6 +160,7 @@ public class Main {
   	 	for(int f: fp.peaks){
   	 		System.out.println(f);
   	 	}
+  	 	GUI1.tabbedPanel.setSelectedComponent(GUI1.chartCorrelationPanel);
 	  	  	
 //	  	createChartForCorrelation(correlationForTest.get(przesuniecie_do_testow));
 	}
@@ -178,12 +180,12 @@ public class Main {
 			framesA = frames;
 		}
 		else{
-			System.out.println("normal file");
+//			System.out.println("normal file");
 			frames = fu.getFrames(pomiar, 28);
 			
 			int i = 0, idA =0;
 			for(Frame f : frames){
-				System.out.println(f.getAvgC());
+//				System.out.println(f.getAvgC());
 				if(i%2 == 0){
 					f.setTime(idA);
 					framesA.add(f);
@@ -217,7 +219,7 @@ public class Main {
 //  	  		System.out.println(c.id);
 //  	  	}
 	  	  	if(czas_poczatkowy_t == przesuniecie_do_testow){
-	  	  		System.out.println("Wykres korelacji do testów...");
+//	  	  		System.out.println("Wykres korelacji do testów...");
 	  	  		correlations_for_test_chart = correlation_for_t;
 	  	  		createChartForCorrelation(correlations_for_test_chart);
 	  	  		}
@@ -241,7 +243,7 @@ public class Main {
   	  		
 //  	  		}
 //  	  		correlations[czas_poczatkowy_t] = maxCorrelation.id; 
-	  		System.out.println("id: "+czas_poczatkowy_t);
+//	  		System.out.println("id: "+czas_poczatkowy_t);
 	  		
   	  	correlations[czas_poczatkowy_t] = getMaxAutocorrelation(correlation_for_sort);
 	  	  }
@@ -251,12 +253,12 @@ public class Main {
   	  		czas_poczatkowy_t++;
   	  		statistic_for_t.add(calculateStatistic(framesA));
   	  	}
-	  	  System.out.println("correlation:");
-	  	  int i=0;
-	  	  for(int c : correlations){
-	  		  System.out.println(i+" "+c);
-	  		  i++;
-	  	  }
+//	  	  System.out.println("correlation:");
+//	  	  int i=0;
+//	  	  for(int c : correlations){
+//	  		  System.out.println(i+" "+c);
+//	  		  i++;
+//	  	  }
 	  	  	
 //		int [] correlations = new int[framesA.size()-dlugosc_okna_czasowego_n-dlugosc_przesuniecia_k-1-czas_poczatkowy_t];
 //		
@@ -310,6 +312,7 @@ public class Main {
 	}
 	public static void generateAllChart(){
 		try {
+			System.out.println("generatAllChart");
 			createAllChart(statistic_for_t, correlations, framesA);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -495,6 +498,7 @@ public class Main {
 	}
 	
 	public static void createAllChart(ArrayList<Statistics> statistic_for_t, int[] correlation, ArrayList<Frame> frames) throws FileNotFoundException, IOException{
+		System.out.println("CreateAllChart");
 		Statistics [] statisticsArray = new Statistics[statistic_for_t.size()];
 		int i = 0;
 		for(Statistics s: statistic_for_t){
@@ -511,6 +515,15 @@ public class Main {
 			      correlation,
 			      frames);
 		  gui.setVisible(true);
+		  GUI1.allPanel.validate();
+		  GUI1.allPanel.repaint();
+		  GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
+//		  gui.validate();
+//		  gui.repaint();
+//		  gui.chartAllPanel.validate();
+//		  gui.chartAllPanel.repaint();
+//		  gui.tabbedPanel.validate();
+//		  gui.tabbedPanel.repaint();
 	}
 	
 	public static void createChartForTest(ArrayList<Frame> framesA, ArrayList<Frame> framesB){
@@ -733,12 +746,73 @@ public class Main {
 
 	    return false;
 	}
+	
+	public static void createPixelMapForAllTimeButton(){
+		System.out.println("createPixelMapForAllTimeButton");
+		GUI1.tabbedPanel.setSelectedComponent(GUI1.pixelPanel);
+
+//		pixelsToAutocorrelation.clear();
+//		FileUtils fu = new FileUtils();
+//		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");
+//		ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
+//	
+//		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
+//		
+//		int id = 0;
+//		for(int i=0; i<framesA.get(0).getC().length; i++){
+//			for(int j=0; j<framesA.size(); j++){	
+//				pixelsA[id][j] = framesA.get(j).getC()[i];
+//			}
+//			id++;
+//			}
+//		
+//		Dimension d = new Dimension(100,100);
+//		GUI1.pixelPanel.removeAll();
+//		GUI1.squarePanel.removeAll();
+//        Insets insetsZero = new Insets(0, 0, 0, 0);
+//        GridBagLayout gridbagForPixelMap = new GridBagLayout();
+//        GUI1.squarePanel.setLayout(gridbagForPixelMap);
+//        for(int t=0; t<pixelsA[0].length; t++){
+//            for(int i=0; i<32; i++){
+//            	for(int j=0; j<32; j++){
+//            		final Pixel button = new Pixel();
+//            		button.setId(i*32+j);
+//            		button.setValue(pixelsA[button.getId()][t]);
+////            		System.out.println(pixelsA[i*32+j][t]);
+//            		int rgbColor = (int) (100000*pixelsA[i*32+j][t]);
+//            		final Color c = new Color(rgbColor);
+//            		button.setBackground(c);
+//            		button.addActionListener(new ActionListener() {
+//    					
+//    					public void actionPerformed(ActionEvent arg0) {
+//    						if(button.getBackground() == Color.GRAY){
+//    							button.setBackground(c);
+//    							pixelsToAutocorrelation.remove((Integer)button.getId());
+//    						}
+//    						else{
+//    							button.setBackground(Color.GRAY);
+//    							pixelsToAutocorrelation.add(button.getId());
+//    						}
+//    							
+//    						
+//    					}
+//    				});
+//            		GUI1.squarePanel.add(button);
+//            		gridbagForPixelMap.setConstraints(button, new GridBagConstraints(i, j, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
+//            	}
+//            }
+//            GUI1.pixelPanel.add(GUI1.squarePanel);
+//            GUI1.pixelPanel.updateUI();
+//        }
+
+	}
 
 	public static void createPixelMap(){
 		pixelsToAutocorrelation.clear();
-		FileUtils fu = new FileUtils();
-		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");
-		ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
+		framesA = loadFile();
+//		FileUtils fu = new FileUtils();
+//		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");
+//		ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
 	
 		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
 		
@@ -761,7 +835,7 @@ public class Main {
         		final Pixel button = new Pixel();
         		button.setId(i*32+j);
         		button.setValue(pixelsA[button.getId()][timeForPixelMap]);
-        		System.out.println(pixelsA[i*32+j][timeForPixelMap]);
+//        		System.out.println(pixelsA[i*32+j][timeForPixelMap]);
         		int rgbColor = (int) (100000*pixelsA[i*32+j][timeForPixelMap]);
         		final Color c = new Color(rgbColor);
         		button.setBackground(c);
@@ -775,26 +849,49 @@ public class Main {
 						else{
 							button.setBackground(Color.GRAY);
 							pixelsToAutocorrelation.add(button.getId());
-						}
-							
-						
+						}													
 					}
 				});
         		GUI1.squarePanel.add(button);
         		gridbagForPixelMap.setConstraints(button, new GridBagConstraints(i, j, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
         	}
         }
+        
+        GUI1.tabbedPanel.setSelectedComponent(GUI1.pixelPanel);
         GUI1.pixelPanel.add(GUI1.squarePanel);
-//        GUI1.pixelPanel.repaint();
-        GUI1.pixelPanel.updateUI();
+        GUI1.pixelPanel.validate();
+        GUI1.pixelPanel.repaint();
+     
         
 	}
-	public static void calculateAutocorrelationForPixel(){
-		correlationForTest = new ArrayList<CorrelationObject[]>();
-		System.out.println("Pixel + autokorlecja");
-		FileUtils fu = new FileUtils();
-		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");
-		ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
+	
+	public static ArrayList<Frame> loadFile(){
+		if(isPixel){
+			System.out.println("Load file for pixel");
+			correlationForTest = new ArrayList<CorrelationObject[]>();
+			System.out.println("Pixel + autokorlecja");
+			FileUtils fu = new FileUtils();
+			String pomiarA = fu.loadFile(file);
+			ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
+			
+			return framesA;
+		}
+		return null;
+	}
+	
+	public static void calculateAvgMeasurementForPixel(){
+		ArrayList<Frame> framesA = loadFile();
+		
+		try {
+			createChartForFrames(framesA);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void calculateAutocorrelationForPixel(){		
+		framesA = loadFile();
 	
 		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
 		
@@ -816,7 +913,7 @@ public class Main {
 				frame.setAvgC(frame.getAvgC()+f.getC()[i]);
 			}
 			frame.setAvgC(frame.getAvgC()/pixelsToAutocorrelation.size());
-			System.out.println(frame.getAvgC());
+//			System.out.println(frame.getAvgC());
 			framesToAutocorrelation.add(frame);
 		}
 		
@@ -836,7 +933,7 @@ public class Main {
   	  		CorrelationObject[] correlation_for_t = calculateAutocorrelation(framesToAutocorrelation);
 
 	  	  	if(czas_poczatkowy_t == przesuniecie_do_testow){
-	  	  		System.out.println("Wykres korelacji do testów...");
+//	  	  		System.out.println("Wykres korelacji do testów...");
 	  	  		correlations_for_test_chart = correlation_for_t;
 	  	  		createChartForCorrelation(correlations_for_test_chart);
 	  	  		}
@@ -844,7 +941,7 @@ public class Main {
 	  	  if(k_poczatkowe<correlation_for_t.length){
 	  		CorrelationObject[] correlation_for_sort = Arrays.copyOfRange(correlation_for_t, k_poczatkowe, correlation_for_t.length);
 
-	  		System.out.println("id: "+czas_poczatkowy_t);
+//	  		System.out.println("id: "+czas_poczatkowy_t);
 	  		
   	  	correlations[czas_poczatkowy_t] = getMaxAutocorrelation(correlation_for_sort);
 	  	  }
@@ -882,7 +979,7 @@ public class Main {
 			try {
 				createChartForPixel(pixelsA[pixel]);
 			} catch (IOException e) {}
-		
+		GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
 	}
 	public static void calculateForPixel(){
 		FileUtils fu = new FileUtils();
