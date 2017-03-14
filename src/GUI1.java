@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -530,7 +531,7 @@ public class GUI1 extends JFrame {
         resultPanel.setLayout(new BorderLayout());
         resultPanel.add(tabbedPanel, BorderLayout.CENTER);
 
-        FlowLayout bl = new FlowLayout();
+        BoxLayout bl = new BoxLayout(pixelPanel, BoxLayout.Y_AXIS);
         pixelPanel.setLayout(bl);
      
         squarePanel.setMaximumSize(new Dimension(670,670));

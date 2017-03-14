@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,7 +11,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.tc33.jheatchart.HeatChart;
 
@@ -836,8 +841,10 @@ public class Main {
         		button.setId(i*32+j);
         		button.setValue(pixelsA[button.getId()][timeForPixelMap]);
 //        		System.out.println(pixelsA[i*32+j][timeForPixelMap]);
-        		int rgbColor = (int) (100000*pixelsA[i*32+j][timeForPixelMap]);
-        		final Color c = new Color(rgbColor);
+//        		int rgbColor = (int) (16777215*pixelsA[i*32+j][timeForPixelMap]);
+//        		final Color c = new Color(rgbColor);
+        		final Color c = Color.getHSBColor((float) (1 - pixelsA[i*32+j][timeForPixelMap]) * 0.6f, 1.0f, 1.0f);
+//        		final Color c = Color.getHSBColor((float) pixelsA[i*32+j][timeForPixelMap]*100 / (float) 150, 0.85f, 1.0f);
         		button.setBackground(c);
         		button.addActionListener(new ActionListener() {
 					
@@ -853,17 +860,52 @@ public class Main {
 					}
 				});
         		GUI1.squarePanel.add(button);
-        		gridbagForPixelMap.setConstraints(button, new GridBagConstraints(i, j, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
+        		gridbagForPixelMap.setConstraints(button, new GridBagConstraints(i+1, j, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
         	}
         }
         
+        GridBagLayout gridbagForLegend = new GridBagLayout();
+        JPanel legendPanel = new JPanel();
+        legendPanel.setLayout(gridbagForLegend);
+        for(int i = 0; i<=100; i++){
+        	JLabel label = new JLabel();
+        	label.setText(" ");
+        	label.setOpaque(true);
+        	             
+
+        	Color c = Color.getHSBColor((float) (1- (float)i/ 100) * 0.6f, 1.0f, 1.0f);
+        
+        	label.setBackground(c);
+        	label.setForeground(c);
+        	label.setMinimumSize(new Dimension(1,10));
+        	label.setMaximumSize(new Dimension(1, 10));
+        	label.setPreferredSize(new Dimension(1, 10));
+        	label.setBounds(0, 0, 0, 0);
+        	JLabel label2 = new JLabel();
+        	if(i%20 == 0){
+        		label2.setText(""+i/100.0);
+        	}
+        	else{
+        		label2.setText("");
+        	}
+        	gridbagForLegend.setConstraints(label, new GridBagConstraints(i, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insetsZero, 0, 0));
+        	gridbagForLegend.setConstraints(label2, new GridBagConstraints(i, 1, 1, 1, 1, 1, GridBagConstraints.LINE_START, GridBagConstraints.HORIZONTAL, insetsZero, 0, 0));
+        	legendPanel.add(label);
+        	legendPanel.add(label2);
+//        	gridbagForPixelMap.setConstraints(label, new GridBagConstraints(32, i, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
+        	
+        }
+//        gridbagForPixelMap.setConstraints(legendPanel, new GridBagConstraints(0, 0, 32, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
+        
         GUI1.tabbedPanel.setSelectedComponent(GUI1.pixelPanel);
         GUI1.pixelPanel.add(GUI1.squarePanel);
+        GUI1.pixelPanel.add(legendPanel);
         GUI1.pixelPanel.validate();
         GUI1.pixelPanel.repaint();
      
         
 	}
+	
 	
 	public static ArrayList<Frame> loadFile(){
 		if(isPixel){

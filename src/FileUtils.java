@@ -173,7 +173,7 @@ public class FileUtils {
 	}
 	
 	public String loadFile(File file){
-		System.out.println("plik:" + file);
+//		System.out.println("plik:" + file);
 		FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
