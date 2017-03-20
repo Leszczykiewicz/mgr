@@ -1,29 +1,68 @@
 import java.awt.BorderLayout;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 
+
 public class ChartUtils
 {
-	public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, Statistics[] statistics, int[] correlation, ArrayList<Frame> frames) throws FileNotFoundException, IOException
-	   {
+
+	ArrayList<StatisticsDataSeries> dataSeriesBackup = new ArrayList<StatisticsDataSeries>();
+	int i = 0;
+	
+	public ChartUtils(){
+		
+	}
+	
+	public void clearCharts(){
+		dataSeriesBackup.clear();
+		i = 0;
+	}
+	public void createEmptyChart(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName){
+		JFreeChart lineChart = ChartFactory.createXYLineChart(
+		         chartTitle,
+		         xName,yName,
+		         new XYSeriesCollection(),
+		         PlotOrientation.VERTICAL,
+		         true,true,false);
+		         
+		      ChartPanel chartPanel = new ChartPanel( lineChart );
+		      panel.setLayout(new BorderLayout());
+		      panel.add(chartPanel, BorderLayout.CENTER);
+	}
+	
+	public void createChartForAll(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, Statistics[] statistics, int[] correlation, ArrayList<Frame> frames, ArrayList<Double> stdForAtuocorrelation) throws FileNotFoundException, IOException
+	{
 		System.out.println("ChartUtils");
 	      JFreeChart lineChart = ChartFactory.createXYLineChart(
 	         chartTitle,
 	         xName,yName,
-	         createDataset(statistics, correlation, frames),
+	         createDataset(statistics, correlation, frames, stdForAtuocorrelation),
+	         PlotOrientation.VERTICAL,
+	         true,true,false);
+	         
+	      ChartPanel chartPanel = new ChartPanel( lineChart );
+	      panel.setLayout(new BorderLayout());
+	      panel.add(chartPanel, BorderLayout.CENTER);
+//	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
+	      
+	   }
+	
+	public void refreshChartForAll(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName) throws FileNotFoundException, IOException
+	{
+		System.out.println("ChartUtils");
+	      JFreeChart lineChart = ChartFactory.createXYLineChart(
+	         chartTitle,
+	         xName,yName,
+	         refreshDataset(),
 	         PlotOrientation.VERTICAL,
 	         true,true,false);
 	         
@@ -171,17 +210,14 @@ public class ChartUtils
    
    private XYSeriesCollection createDataset(ArrayList<Frame> framesA, ArrayList<Frame> framesB)
    {
-	   int idA = 0, idB=0;
 	   XYSeries seriesA = new XYSeries("P³aszczyzna A");
 	   for(Frame f : framesA){
 		   seriesA.add(f.getTime(), f.getAvgC());
-		   idA++;
 	   }
 	   
 	   XYSeries seriesB = new XYSeries("P³aszczyzna B");
 	   for(Frame f : framesB){
 		   seriesB.add(f.getTime(), f.getAvgC());
-		   idB++;
 	   }
 	   XYSeriesCollection dataset = new XYSeriesCollection();
 	   dataset.addSeries(seriesA);
@@ -204,6 +240,7 @@ public class ChartUtils
 	   }
 	   
 	   XYSeriesCollection dataset = new XYSeriesCollection();
+
 	   dataset.addSeries(seriesA);
 	   dataset.addSeries(seriesB);
 	   dataset.addSeries(seriesC);
@@ -212,15 +249,17 @@ public class ChartUtils
       return dataset;
    }
    
-   private XYSeriesCollection createDataset(Statistics[] statistics, int[] correlation, ArrayList<Frame> frames)
+   private XYSeriesCollection createDataset(Statistics[] statistics, int[] correlation, ArrayList<Frame> frames, ArrayList<Double> stdForAtuocorrelation)
    {
 	   System.out.println("CreateDataset");
-	   XYSeries seriesA = new XYSeries("œrednia");
-	   XYSeries seriesB = new XYSeries("mediana");
-	   XYSeries seriesC = new XYSeries("odchylenie standardowe");
-	   XYSeries seriesD = new XYSeries("wariancja");
-	   XYSeries seriesE = new XYSeries("autokorelacja");
-	   XYSeries seriesF = new XYSeries("Przebieg");
+	   System.out.println(i);
+	   XYSeries seriesA = new XYSeries("œrednia"+i);
+	   XYSeries seriesB = new XYSeries("mediana"+i);
+	   XYSeries seriesC = new XYSeries("odchylenie standardowe"+i);
+	   XYSeries seriesD = new XYSeries("wariancja"+i);
+	   XYSeries seriesE = new XYSeries("autokorelacja"+i);
+	   XYSeries seriesF = new XYSeries("Przebieg"+i);
+	   XYSeries seriesG = new XYSeries("odchylenie autokorelacji"+i);
 	   
 	   for(Statistics s : statistics){
 		   seriesA.add(s.getTime(), s.getAvg()*100);
@@ -235,46 +274,95 @@ public class ChartUtils
 		   seriesE.add(idE, i);
 		   idE++;
 	   }
-	   
-	   int idF = 0;   
+	    
 	   for(Frame f : frames){
 		   seriesF.add(f.getTime(), f.getAvgC()*100);
-		   idF++;
 	   }
 	   
-	  
+	   int idG = 0;
+	   for(Double f : stdForAtuocorrelation){
+		   seriesG.add(idG, f);
+		   idG++;
+	   }
+	   
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesA, STATISTICS_TYPE.AVG));
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesB, STATISTICS_TYPE.MEDIAN));
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesC, STATISTICS_TYPE.STD));
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesD, STATISTICS_TYPE.VARIANCE));
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesE, STATISTICS_TYPE.AUTOCORRELATION));
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesF, STATISTICS_TYPE.MEASUREMENT));
+	   dataSeriesBackup.add(new StatisticsDataSeries(seriesG, STATISTICS_TYPE.STD_AUTOCORRELATION));
+	   
 	   XYSeriesCollection dataset = new XYSeriesCollection();
 
-	   if(GUI1.measurement.isSelected()){
-		   dataset.addSeries(seriesF);
-	   } 
-	   if(GUI1.avg.isSelected()){
-		   dataset.addSeries(seriesA);
-	   }
-	   if(GUI1.median.isSelected()){
-		   dataset.addSeries(seriesB);
-	   }
-	   if(GUI1.std.isSelected()){
-		   dataset.addSeries(seriesC);
-	   }
-	   if(GUI1.variance.isSelected()){
-		   dataset.addSeries(seriesD);
-	   }
-	   if(GUI1.autocorrelationButton.isSelected()){
-		   dataset.addSeries(seriesE);
+	   for(StatisticsDataSeries s:dataSeriesBackup){
+		   System.out.println(s.series.getKey());
+		   if(GUI1.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.median.isSelected() && s.type == STATISTICS_TYPE.MEDIAN){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.std.isSelected() && s.type == STATISTICS_TYPE.STD){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.measurement.isSelected() && s.type == STATISTICS_TYPE.MEASUREMENT){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.autocorrelationButton.isSelected() && s.type == STATISTICS_TYPE.AUTOCORRELATION){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.variance.isSelected() && s.type == STATISTICS_TYPE.VARIANCE){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.autocorrelationStd.isSelected() && s.type == STATISTICS_TYPE.STD_AUTOCORRELATION){
+			   dataset.addSeries(s.series);
+		   }
 	   }
 
+	   i++;
+      return dataset;
+   }
+   
+   private XYSeriesCollection refreshDataset()
+   {
+//	   System.out.println("refreshDataset");	   
+	   
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+
+	   for(StatisticsDataSeries s:dataSeriesBackup){
+//		   System.out.println(s.series.getKey());
+		   if(GUI1.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.median.isSelected() && s.type == STATISTICS_TYPE.MEDIAN){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.std.isSelected() && s.type == STATISTICS_TYPE.STD){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.measurement.isSelected() && s.type == STATISTICS_TYPE.MEASUREMENT){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.autocorrelationButton.isSelected() && s.type == STATISTICS_TYPE.AUTOCORRELATION){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.variance.isSelected() && s.type == STATISTICS_TYPE.VARIANCE){
+			   dataset.addSeries(s.series);
+		   }
+		   else if(GUI1.autocorrelationStd.isSelected() && s.type == STATISTICS_TYPE.STD_AUTOCORRELATION){
+			   dataset.addSeries(s.series);
+		   }
+	   }
 
       return dataset;
    }
    
    private XYSeriesCollection createDataset(ArrayList<Frame> frames)
    {
-	   int idA = 0, idB=0;
 	   XYSeries seriesA = new XYSeries("P³aszczyzna A");
 	   for(Frame f : frames){
 		   seriesA.add(f.getTime(), f.getAvgC());
-		   idA++;
 	   }
 	   
 	  

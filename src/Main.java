@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,6 +24,7 @@ import org.tc33.jheatchart.HeatChart;
 public class Main {
 	
 	public static int dlugosc_okna_czasowego_n = 100; //300
+	public static int dlugosc_okna_czasowego_dla_autokorelacji = 100;
 	public static int d = 0;
 	public static int dlugosc_przesuniecia_k = 20;  //iloœæ ramek przesuniêcia, d³ugoœæ przesuniêcia w ramkach
 	public static int k_poczatkowe;
@@ -41,9 +43,23 @@ public class Main {
 	public static ArrayList<CorrelationObject[]> correlationForTest;
 	public static int[] correlations;
 	public static ArrayList<Statistics> statistic_for_t;
+	public static ArrayList<Double> stdForAtuocorrelation;
 	public static ArrayList<Frame> framesA;
 	public static ArrayList<Integer> pixelsToAutocorrelation = new ArrayList<Integer>();
+	public static ChartUtils chart = new ChartUtils();
 	
+	
+	public static void clearCharts(){
+		chart.clearCharts();
+		GUI1.chartAllPanel.removeAll();
+		chart.createEmptyChart( 
+				   GUI1.chartAllPanel,
+			      "Dane statystyczne" ,
+			      "Dane statystyczne",
+			      "czas[ramka]",
+			      "wartoœæ");
+		GUI1.chartAllPanel.repaint();
+	}
 	
 	public static void test(){
 		correlationForTest = new ArrayList<CorrelationObject[]>();
@@ -161,10 +177,10 @@ public class Main {
   	 	FindPeak fp = new FindPeak();
   	 	fp.peaks.clear();
   	 	FindPeak.peak(correlationValues);
-  	 	System.out.println("Max:");
-  	 	for(int f: fp.peaks){
-  	 		System.out.println(f);
-  	 	}
+//  	 	System.out.println("Max:");
+//  	 	for(int f: fp.peaks){
+//  	 		System.out.println(f);
+//  	 	}
   	 	GUI1.tabbedPanel.setSelectedComponent(GUI1.chartCorrelationPanel);
 	  	  	
 //	  	createChartForCorrelation(correlationForTest.get(przesuniecie_do_testow));
@@ -212,11 +228,9 @@ public class Main {
 		correlations = new int[framesA.size()-dlugosc_okna_czasowego_n];
 		CorrelationObject[] correlations_for_test_chart = new CorrelationObject[framesA.size()-dlugosc_okna_czasowego_n];
 		statistic_for_t = new ArrayList<Statistics>();
-//		int [] correlations = new int[dlugosc_przesuniecia_k];
-		
-//		float[] t1 = new float[dlugosc_okna_czasowego_n+1];
-//  	  	float[] t2 = new float[dlugosc_okna_czasowego_n+1];
+
   	  	int id = 0;
+  	  	int temp_czas_poczatkowy = czas_poczatkowy_t;	
   	  	while(czas_poczatkowy_t < framesA.size() - dlugosc_okna_czasowego_n*2-1){
   	  		CorrelationObject[] correlation_for_t = calculateAutocorrelation(framesA);
 //  	  	System.out.println("result");
@@ -249,7 +263,7 @@ public class Main {
 //  	  		}
 //  	  		correlations[czas_poczatkowy_t] = maxCorrelation.id; 
 //	  		System.out.println("id: "+czas_poczatkowy_t);
-	  		
+	  	
   	  	correlations[czas_poczatkowy_t] = getMaxAutocorrelation(correlation_for_sort);
 	  	  }
 
@@ -257,6 +271,14 @@ public class Main {
 //  	  		System.out.println(correlation_for_t[0].id);
   	  		czas_poczatkowy_t++;
   	  		statistic_for_t.add(calculateStatistic(framesA));
+  	  	}
+  	  	
+  	  	czas_poczatkowy_t = temp_czas_poczatkowy;
+  	    stdForAtuocorrelation = new ArrayList<Double>();
+	  	while(czas_poczatkowy_t < correlations.length - dlugosc_okna_czasowego_dla_autokorelacji*2-1){
+  	  		czas_poczatkowy_t++;
+  	  		stdForAtuocorrelation.add(calculateAutocorrelationStd(correlations));
+  		
   	  	}
 //	  	  System.out.println("correlation:");
 //	  	  int i=0;
@@ -290,7 +312,7 @@ public class Main {
 		
 		try {
 			createStatisticsChart(statistic_for_t);
-			createAllChart(statistic_for_t, correlations, framesA);
+			createAllChart(statistic_for_t, correlations, framesA, stdForAtuocorrelation);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -304,21 +326,21 @@ public class Main {
 			stats.addValue(f.getAvgC());
 		}
 		
-		Double mean = stats.getMean();
-		Double std = stats.getStandardDeviation();
-		Double variance = stats.getPopulationVariance();
-		Double median = stats.getPercentile(50);
-		
-		System.out.println("œrednia: "+ mean);
-		System.out.println("odchylenie: "+ std);
-		System.out.println("wariancja: "+variance);
-		System.out.println("mediana: "+ median);
+//		Double mean = stats.getMean();
+//		Double std = stats.getStandardDeviation();
+//		Double variance = stats.getPopulationVariance();
+//		Double median = stats.getPercentile(50);
+//		
+//		System.out.println("œrednia: "+ mean);
+//		System.out.println("odchylenie: "+ std);
+//		System.out.println("wariancja: "+variance);
+//		System.out.println("mediana: "+ median);
 		
 	}
 	public static void generateAllChart(){
 		try {
 			System.out.println("generatAllChart");
-			createAllChart(statistic_for_t, correlations, framesA);
+			createAllChart(statistic_for_t, correlations, framesA, stdForAtuocorrelation);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -327,6 +349,7 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
+	
 	public static int getMaxAutocorrelation(CorrelationObject[] correlation){
 		
 		float values[] = new float[correlation.length];
@@ -387,18 +410,7 @@ public class Main {
 //		return maxCorrelation.id;
 	}
 	public static Statistics calculateStatistic(ArrayList<Frame> frames){
-//		Statistics statistics;
-//		if(dlugosc_przesuniecia_k > frames.size()-dlugosc_okna_czasowego_n)
-//		{
-//			 statistics = new Statistics[frames.size()-dlugosc_przesuniecia_k];
-//			 System.out.println("skrócone");
-//		}
-//		else{
-//			System.out.println("pe³ne");
-//			statistics = new Statistics[frames.size()];
-//		}
-		
-		
+
 	  float[] t1 = new float[dlugosc_okna_czasowego_n];
 	
 	  int id = 0;
@@ -412,6 +424,26 @@ public class Main {
 		 
 	  return stat;
 	}
+	
+	public static double calculateAutocorrelationStd(int[] correlations){
+		System.out.println("Calculate autocorrelation std");
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+
+
+		  float[] t1 = new float[dlugosc_okna_czasowego_dla_autokorelacji];
+		
+		  int id = 0;
+		  for(int j=czas_poczatkowy_t; j<dlugosc_okna_czasowego_dla_autokorelacji+czas_poczatkowy_t; j++){
+			 t1[id] = correlations[j];			  		 
+			  id++;
+		  }	    	
+		  for(float f : t1){
+				stats.addValue(f);
+			}	
+		  double std = stats.getStandardDeviation();
+		  
+		  return std;
+		}
 	
 	
 	public static void calculateForVector(){
@@ -502,7 +534,7 @@ public class Main {
 		gui.setVisible(true);
 	}
 	
-	public static void createAllChart(ArrayList<Statistics> statistic_for_t, int[] correlation, ArrayList<Frame> frames) throws FileNotFoundException, IOException{
+	public static void createAllChart(ArrayList<Statistics> statistic_for_t, int[] correlation, ArrayList<Frame> frames, ArrayList<Double> stdForAtuocorrelation) throws FileNotFoundException, IOException{
 		System.out.println("CreateAllChart");
 		Statistics [] statisticsArray = new Statistics[statistic_for_t.size()];
 		int i = 0;
@@ -510,7 +542,8 @@ public class Main {
 			statisticsArray[i] = s;
 			i++;
 		}
-		ChartUtils chart = new ChartUtils(
+		
+		chart.createChartForAll(
 				   gui.chartAllPanel,
 			      "Dane statystyczne" ,
 			      "Dane statystyczne",
@@ -518,17 +551,35 @@ public class Main {
 			      "wartoœæ",
 			      statisticsArray,
 			      correlation,
-			      frames);
+			      frames,
+			      stdForAtuocorrelation);
 		  gui.setVisible(true);
 		  GUI1.allPanel.validate();
 		  GUI1.allPanel.repaint();
 		  GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
-//		  gui.validate();
-//		  gui.repaint();
-//		  gui.chartAllPanel.validate();
-//		  gui.chartAllPanel.repaint();
-//		  gui.tabbedPanel.validate();
-//		  gui.tabbedPanel.repaint();
+	}
+	
+	public static void refreshAllChart() {
+		
+		try {
+			chart.refreshChartForAll(
+					   gui.chartAllPanel,
+				      "Dane statystyczne" ,
+				      "Dane statystyczne",
+				      "czas[ramka]",
+				      "wartoœæ");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  gui.setVisible(true);
+		  GUI1.allPanel.validate();
+		  GUI1.allPanel.repaint();
+		  GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
+
 	}
 	
 	public static void createChartForTest(ArrayList<Frame> framesA, ArrayList<Frame> framesB){
@@ -709,14 +760,14 @@ public class Main {
 	    	  }
 	    	  PearsonCorrelation pc = new PearsonCorrelation(t1, t2);
 	    	  correlation[i-dlugosc_przesuniecia_k] = new CorrelationObject(pc.correlation, i);	
-	    	  System.out.println("t1");
-	    	  for(float f: t1){
-	    		  System.out.println(f);
-	    	  }
-	    	  System.out.println("t2");
-	    	  for(float f : t2){
-	    		  System.out.println(f);
-	    	  }
+//	    	  System.out.println("t1");
+//	    	  for(float f: t1){
+//	    		  System.out.println(f);
+//	    	  }
+//	    	  System.out.println("t2");
+//	    	  for(float f : t2){
+//	    		  System.out.println(f);
+//	    	  }
 		 }
 	    	  return correlation;
 	}
@@ -813,6 +864,7 @@ public class Main {
 	}
 
 	public static void createPixelMap(){
+//		GUI1.pixelPanel.add(loadingPanel());
 		pixelsToAutocorrelation.clear();
 		framesA = loadFile();
 //		FileUtils fu = new FileUtils();
@@ -906,6 +958,35 @@ public class Main {
         
 	}
 	
+	private static JPanel loadingPanel() {
+	    JPanel panel = new JPanel();
+	    BoxLayout layoutMgr = new BoxLayout(panel, BoxLayout.PAGE_AXIS);
+	    panel.setLayout(layoutMgr);
+//
+//	    ClassLoader cldr = this.getClass().getClassLoader();
+//	    java.net.URL imageURL   = cldr.getResource("ajax-loader.gif");
+	    ImageIcon imageIcon = new ImageIcon("ajax-loader.gif");
+	    JLabel iconLabel = new JLabel();
+	    iconLabel.setIcon(imageIcon);
+	    imageIcon.setImageObserver(iconLabel);
+
+	    JLabel label = new JLabel("Loading...");
+	    panel.add(iconLabel);
+	    panel.add(label);
+	    return panel;
+	}
+	
+	public static void loadingAnimation(){
+		 JFrame frame = new JFrame("Loading...");
+
+		 ImageIcon loading = new ImageIcon("ajax-loader.gif");
+		    frame.add(new JLabel("loading... ", loading, JLabel.CENTER));
+
+		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setSize(400, 300);
+		    frame.setVisible(true);
+	}
+	
 	
 	public static ArrayList<Frame> loadFile(){
 		if(isPixel){
@@ -933,6 +1014,7 @@ public class Main {
 	}
 	
 	public static void calculateAutocorrelationForPixel(){		
+//		loadingAnimation();
 		framesA = loadFile();
 	
 		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
@@ -969,8 +1051,10 @@ public class Main {
 		correlations = new int[framesToAutocorrelation.size()-dlugosc_okna_czasowego_n];
 		CorrelationObject[] correlations_for_test_chart = new CorrelationObject[framesToAutocorrelation.size()-dlugosc_okna_czasowego_n];
 		statistic_for_t = new ArrayList<Statistics>();
+		stdForAtuocorrelation = new ArrayList<Double>();
 
   	  	id = 0;
+  	  	int temp_czas_poczatkowy = czas_poczatkowy_t;
   	  	while(czas_poczatkowy_t < framesToAutocorrelation.size() - dlugosc_okna_czasowego_n*2-1){
   	  		CorrelationObject[] correlation_for_t = calculateAutocorrelation(framesToAutocorrelation);
 
@@ -991,14 +1075,23 @@ public class Main {
 	  	  
 //  	  		System.out.println(correlation_for_t[0].id);
   	  		czas_poczatkowy_t++;
-  	  		statistic_for_t.add(calculateStatistic(framesA));
+  	  		statistic_for_t.add(calculateStatistic(framesToAutocorrelation));
   	  	}
-	  	  System.out.println("correlation:");
-	  	  int i=0;
-	  	  for(int c : correlations){
-	  		  System.out.println(i+" "+c);
-	  		  i++;
-	  	  }
+  	  	czas_poczatkowy_t = temp_czas_poczatkowy;
+  	  	id = 0;
+  	  	while(czas_poczatkowy_t < correlations.length - dlugosc_okna_czasowego_dla_autokorelacji*2-1){
+  	  		czas_poczatkowy_t++;
+  	  		stdForAtuocorrelation.add(calculateAutocorrelationStd(correlations));
+  		
+  	  	}
+  	  	
+
+//	  	  System.out.println("correlation:");
+//	  	  int i=0;
+//	  	  for(int c : correlations){
+//	  		  System.out.println(i+" "+c);
+//	  		  i++;
+//	  	  }
 	  	  	
 
 		try {
@@ -1010,7 +1103,7 @@ public class Main {
 		
 		try {
 			createStatisticsChart(statistic_for_t);
-			createAllChart(statistic_for_t, correlations, framesA);
+			createAllChart(statistic_for_t, correlations, framesToAutocorrelation, stdForAtuocorrelation);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
