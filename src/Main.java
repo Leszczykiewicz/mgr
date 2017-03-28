@@ -1,21 +1,29 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.border.Border;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.tc33.jheatchart.HeatChart;
@@ -472,11 +480,6 @@ public class Main {
 			}
 			i++;
 		}
-//		System.out.println("A: " + framesA.size());
-//		System.out.println("B: " + framesB.size());
-			      
-//	      String pomiarB = fu.openFile("pomiarB");
-//			ArrayList<Frame> framesB = fu.getFrames(pomiarB, 28);
 			createChartForFrames(framesA, framesB);
 			createTestChart(framesA, framesB);		
 		      
@@ -487,7 +490,6 @@ public class Main {
 		      
 		      createChartForCorrelation(correlation);
 		      Arrays.sort(correlation);
-//		      System.out.println(correlation[correlation.length-1].id);
 	}
 	
 	public static void createChartForFrames(ArrayList<Frame> framesA, ArrayList<Frame> framesB){
@@ -1010,9 +1012,30 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
+	public static JFrame f;
+	public static void createLoadingFrame(){
+		 f = new JFrame("Proszê czekaæ...");
+		    f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		    Container content = f.getContentPane();
+		    JProgressBar progressBar = new JProgressBar();
+		    progressBar.setIndeterminate(true);
+		    Border border = BorderFactory.createTitledBorder("£adowanie...");
+		    progressBar.setBorder(border);
+		    content.add(progressBar, BorderLayout.NORTH);
+		    f.setAlwaysOnTop(true);
+		    f.setLocationRelativeTo(null);
+		    f.setSize(300, 100);
+		    f.setVisible(true);
+	}
+	
+	public static void closeLoadingFrame(){
+		gui.setEnabled(true);
+		f.setVisible(false);
+	}
 	
 	public static void calculateAutocorrelationForPixel(){		
-//		loadingAnimation();
+		createLoadingFrame();
+
 		framesA = loadFile();
 	
 		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
@@ -1112,9 +1135,11 @@ public class Main {
 			try {
 				createChartForPixel(pixelsA[pixel]);
 			} catch (IOException e) {}
-		GUI.tabbedPanel.setSelectedComponent(GUI.allPanel);
+		GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
+		closeLoadingFrame();
 	}
 	public static void calculateForPixel(){
+		
 		FileUtils fu = new FileUtils();
 //		String pomiarA = fu.openFile("f40_v800_hor.aim");
 		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");

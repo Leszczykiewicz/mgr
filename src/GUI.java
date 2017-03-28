@@ -20,6 +20,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
@@ -37,6 +38,7 @@ public class GUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public static ProgressPopUp progressFrame;
     public static JPanel chartDataPanel = new JPanel();
     public static JPanel chartCorrelationPanel = new JPanel();
     public static JPanel chartTestPanel = new JPanel();
@@ -218,6 +220,9 @@ public class GUI extends JFrame {
     	calculateCorrelationButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
+//				JOptionPane.showMessageDialog(GUI1.this, "A basic JOptionPane message dialog");
+				
+	
 				Main.dlugosc_przesuniecia_k = (Integer) differenceSpinner.getValue();
 				Main.dlugosc_okna_czasowego_n = (Integer) kSpinner.getValue();
 				Main.czas_poczatkowy_t = (Integer) startPointSpinner.getValue();
@@ -242,6 +247,7 @@ public class GUI extends JFrame {
 				}			
 				else{
 					Main.calculateAutocorrelationForPixel();
+//					GUI1.progressFrame.close();
 				}
 			}
 		});
