@@ -297,25 +297,25 @@ public class ChartUtils
 
 	   for(StatisticsDataSeries s:dataSeriesBackup){
 		   System.out.println(s.series.getKey());
-		   if(GUI1.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
+		   if(GUI.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.median.isSelected() && s.type == STATISTICS_TYPE.MEDIAN){
+		   else if(GUI.median.isSelected() && s.type == STATISTICS_TYPE.MEDIAN){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.std.isSelected() && s.type == STATISTICS_TYPE.STD){
+		   else if(GUI.std.isSelected() && s.type == STATISTICS_TYPE.STD){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.measurement.isSelected() && s.type == STATISTICS_TYPE.MEASUREMENT){
+		   else if(GUI.measurement.isSelected() && s.type == STATISTICS_TYPE.MEASUREMENT){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.autocorrelationButton.isSelected() && s.type == STATISTICS_TYPE.AUTOCORRELATION){
+		   else if(GUI.autocorrelationButton.isSelected() && s.type == STATISTICS_TYPE.AUTOCORRELATION){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.variance.isSelected() && s.type == STATISTICS_TYPE.VARIANCE){
+		   else if(GUI.variance.isSelected() && s.type == STATISTICS_TYPE.VARIANCE){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.autocorrelationStd.isSelected() && s.type == STATISTICS_TYPE.STD_AUTOCORRELATION){
+		   else if(GUI.autocorrelationStd.isSelected() && s.type == STATISTICS_TYPE.STD_AUTOCORRELATION){
 			   dataset.addSeries(s.series);
 		   }
 	   }
@@ -332,25 +332,25 @@ public class ChartUtils
 
 	   for(StatisticsDataSeries s:dataSeriesBackup){
 //		   System.out.println(s.series.getKey());
-		   if(GUI1.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
+		   if(GUI.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.median.isSelected() && s.type == STATISTICS_TYPE.MEDIAN){
+		   else if(GUI.median.isSelected() && s.type == STATISTICS_TYPE.MEDIAN){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.std.isSelected() && s.type == STATISTICS_TYPE.STD){
+		   else if(GUI.std.isSelected() && s.type == STATISTICS_TYPE.STD){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.measurement.isSelected() && s.type == STATISTICS_TYPE.MEASUREMENT){
+		   else if(GUI.measurement.isSelected() && s.type == STATISTICS_TYPE.MEASUREMENT){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.autocorrelationButton.isSelected() && s.type == STATISTICS_TYPE.AUTOCORRELATION){
+		   else if(GUI.autocorrelationButton.isSelected() && s.type == STATISTICS_TYPE.AUTOCORRELATION){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.variance.isSelected() && s.type == STATISTICS_TYPE.VARIANCE){
+		   else if(GUI.variance.isSelected() && s.type == STATISTICS_TYPE.VARIANCE){
 			   dataset.addSeries(s.series);
 		   }
-		   else if(GUI1.autocorrelationStd.isSelected() && s.type == STATISTICS_TYPE.STD_AUTOCORRELATION){
+		   else if(GUI.autocorrelationStd.isSelected() && s.type == STATISTICS_TYPE.STD_AUTOCORRELATION){
 			   dataset.addSeries(s.series);
 		   }
 	   }

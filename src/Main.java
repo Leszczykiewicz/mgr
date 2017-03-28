@@ -31,7 +31,7 @@ public class Main {
 	public static int czas_poczatkowy_t = 3000; //2000
 	public static int przesuniecie_do_testow = 0;
 	public static int timeForPixelMap = 0;
-	public static GUI1 gui;
+	public static GUI gui;
 	public static int temp = 0;
 	public static int pixel = 0;
 	public static boolean isVector = true;
@@ -51,14 +51,14 @@ public class Main {
 	
 	public static void clearCharts(){
 		chart.clearCharts();
-		GUI1.chartAllPanel.removeAll();
+		GUI.chartAllPanel.removeAll();
 		chart.createEmptyChart( 
-				   GUI1.chartAllPanel,
+				   GUI.chartAllPanel,
 			      "Dane statystyczne" ,
 			      "Dane statystyczne",
 			      "czas[ramka]",
 			      "wartoœæ");
-		GUI1.chartAllPanel.repaint();
+		GUI.chartAllPanel.repaint();
 	}
 	
 	public static void test(){
@@ -93,7 +93,6 @@ public class Main {
 		try {
 			createChartForFrames(framesA);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 //		createTestChart(framesA);		
@@ -181,7 +180,7 @@ public class Main {
 //  	 	for(int f: fp.peaks){
 //  	 		System.out.println(f);
 //  	 	}
-  	 	GUI1.tabbedPanel.setSelectedComponent(GUI1.chartCorrelationPanel);
+  	 	GUI.tabbedPanel.setSelectedComponent(GUI.chartCorrelationPanel);
 	  	  	
 //	  	createChartForCorrelation(correlationForTest.get(przesuniecie_do_testow));
 	}
@@ -219,7 +218,6 @@ public class Main {
 		try {
 			createChartForFrames(framesA);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 //		createTestChart(framesA);			     
@@ -554,9 +552,9 @@ public class Main {
 			      frames,
 			      stdForAtuocorrelation);
 		  gui.setVisible(true);
-		  GUI1.allPanel.validate();
-		  GUI1.allPanel.repaint();
-		  GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
+		  GUI.allPanel.validate();
+		  GUI.allPanel.repaint();
+		  GUI.tabbedPanel.setSelectedComponent(GUI.allPanel);
 	}
 	
 	public static void refreshAllChart() {
@@ -576,9 +574,9 @@ public class Main {
 			e.printStackTrace();
 		}
 		  gui.setVisible(true);
-		  GUI1.allPanel.validate();
-		  GUI1.allPanel.repaint();
-		  GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
+		  GUI.allPanel.validate();
+		  GUI.allPanel.repaint();
+		  GUI.tabbedPanel.setSelectedComponent(GUI.allPanel);
 
 	}
 	
@@ -805,7 +803,7 @@ public class Main {
 	
 	public static void createPixelMapForAllTimeButton(){
 		System.out.println("createPixelMapForAllTimeButton");
-		GUI1.tabbedPanel.setSelectedComponent(GUI1.pixelPanel);
+		GUI.tabbedPanel.setSelectedComponent(GUI.pixelPanel);
 
 //		pixelsToAutocorrelation.clear();
 //		FileUtils fu = new FileUtils();
@@ -882,11 +880,11 @@ public class Main {
 			}
 		
 		Dimension d = new Dimension(100,100);
-		GUI1.pixelPanel.removeAll();
-		GUI1.squarePanel.removeAll();
+		GUI.pixelPanel.removeAll();
+		GUI.squarePanel.removeAll();
         Insets insetsZero = new Insets(0, 0, 0, 0);
         GridBagLayout gridbagForPixelMap = new GridBagLayout();
-        GUI1.squarePanel.setLayout(gridbagForPixelMap);
+        GUI.squarePanel.setLayout(gridbagForPixelMap);
         for(int i=0; i<32; i++){
         	for(int j=0; j<32; j++){
         		final Pixel button = new Pixel();
@@ -911,7 +909,7 @@ public class Main {
 						}													
 					}
 				});
-        		GUI1.squarePanel.add(button);
+        		GUI.squarePanel.add(button);
         		gridbagForPixelMap.setConstraints(button, new GridBagConstraints(i+1, j, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
         	}
         }
@@ -949,11 +947,11 @@ public class Main {
         }
 //        gridbagForPixelMap.setConstraints(legendPanel, new GridBagConstraints(0, 0, 32, 0, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insetsZero, 0, 0));
         
-        GUI1.tabbedPanel.setSelectedComponent(GUI1.pixelPanel);
-        GUI1.pixelPanel.add(GUI1.squarePanel);
-        GUI1.pixelPanel.add(legendPanel);
-        GUI1.pixelPanel.validate();
-        GUI1.pixelPanel.repaint();
+        GUI.tabbedPanel.setSelectedComponent(GUI.pixelPanel);
+        GUI.pixelPanel.add(GUI.squarePanel);
+        GUI.pixelPanel.add(legendPanel);
+        GUI.pixelPanel.validate();
+        GUI.pixelPanel.repaint();
      
         
 	}
@@ -1114,7 +1112,7 @@ public class Main {
 			try {
 				createChartForPixel(pixelsA[pixel]);
 			} catch (IOException e) {}
-		GUI1.tabbedPanel.setSelectedComponent(GUI1.allPanel);
+		GUI.tabbedPanel.setSelectedComponent(GUI.allPanel);
 	}
 	public static void calculateForPixel(){
 		FileUtils fu = new FileUtils();
@@ -1265,7 +1263,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-	    gui = new GUI1();
+	    gui = new GUI();
 	    gui.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 	    gui.setVisible(true);
 	    

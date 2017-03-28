@@ -29,7 +29,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
-public class GUI1 extends JFrame {
+public class GUI extends JFrame {
     
     
     /**
@@ -83,7 +83,7 @@ public class GUI1 extends JFrame {
     
     public static JTabbedPane tabbedPanel;
    
-    public GUI1() {
+    public GUI() {
 
         initUI();
         addComponents();
@@ -523,7 +523,7 @@ public class GUI1 extends JFrame {
 			public void actionPerformed(ActionEvent e) {		
 				JFileChooser fileChooser = new JFileChooser();
 		    	fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		    	int result = fileChooser.showOpenDialog(GUI1.this);
+		    	int result = fileChooser.showOpenDialog(GUI.this);
 		    	if (result == JFileChooser.APPROVE_OPTION) {
 		    	    Main.file = fileChooser.getSelectedFile();
 		    	    System.out.println("plik from GUI: "+Main.file);

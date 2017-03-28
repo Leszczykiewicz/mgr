@@ -1,13 +1,13 @@
 
-public class CorrelationObject implements Comparable{
+public class CorrelationObject implements Comparable<CorrelationObject>{
 	public float value;
 	public int id;
 	
-	public int compareTo(Object arg0) {
-		if(this.value < ((CorrelationObject)arg0).value){
+	public int compareTo(CorrelationObject arg0) {
+		if(this.value < (arg0).value){
 			return 1;
 		}
-		if(this.value > ((CorrelationObject)arg0).value){
+		if(this.value > (arg0).value){
 			return -1;
 		}
 		else
@@ -19,5 +19,6 @@ public class CorrelationObject implements Comparable{
 		this.value = value;
 		this.id = id;
 	}
+
 
 }
