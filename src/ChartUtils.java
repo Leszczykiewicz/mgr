@@ -41,7 +41,7 @@ public class ChartUtils
 	
 	public void createChartForAll(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, Statistics[] statistics, int[] correlation, ArrayList<Frame> frames, ArrayList<Double> stdForAtuocorrelation) throws FileNotFoundException, IOException
 	{
-		System.out.println("ChartUtils");
+//		System.out.println("ChartUtils");
 	      JFreeChart lineChart = ChartFactory.createXYLineChart(
 	         chartTitle,
 	         xName,yName,
@@ -58,7 +58,7 @@ public class ChartUtils
 	
 	public void refreshChartForAll(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName) throws FileNotFoundException, IOException
 	{
-		System.out.println("ChartUtils");
+//		System.out.println("ChartUtils");
 	      JFreeChart lineChart = ChartFactory.createXYLineChart(
 	         chartTitle,
 	         xName,yName,
@@ -251,8 +251,8 @@ public class ChartUtils
    
    private XYSeriesCollection createDataset(Statistics[] statistics, int[] correlation, ArrayList<Frame> frames, ArrayList<Double> stdForAtuocorrelation)
    {
-	   System.out.println("CreateDataset");
-	   System.out.println(i);
+//	   System.out.println("CreateDataset");
+//	   System.out.println(i);
 	   XYSeries seriesA = new XYSeries("œrednia"+i);
 	   XYSeries seriesB = new XYSeries("mediana"+i);
 	   XYSeries seriesC = new XYSeries("odchylenie standardowe"+i);
@@ -296,7 +296,7 @@ public class ChartUtils
 	   XYSeriesCollection dataset = new XYSeriesCollection();
 
 	   for(StatisticsDataSeries s:dataSeriesBackup){
-		   System.out.println(s.series.getKey());
+//		   System.out.println(s.series.getKey());
 		   if(GUI.avg.isSelected() && s.type == STATISTICS_TYPE.AVG){
 			   dataset.addSeries(s.series);
 		   }

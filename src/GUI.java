@@ -20,7 +20,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
@@ -38,7 +37,6 @@ public class GUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static ProgressPopUp progressFrame;
     public static JPanel chartDataPanel = new JPanel();
     public static JPanel chartCorrelationPanel = new JPanel();
     public static JPanel chartTestPanel = new JPanel();
@@ -180,6 +178,24 @@ public class GUI extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				Main.createPixelMap();
+		    	kLabel.setEnabled(true);
+		    	kSpinner.setEnabled(true);
+		    	kStartLabel.setEnabled(true);
+		    	kStartSpinner.setEnabled(true);
+		        differenceLabel.setEnabled(true);
+		        differenceSpinner.setEnabled(true);
+		        startPointLabel.setEnabled(true);
+		        startPointSpinner.setEnabled(true);
+		        differenceForAutocorrelationLabel.setEnabled(true);
+		        differenceForAutocorrelationSpinner.setEnabled(true);
+		        pixelLabel.setEnabled(true);
+		        pixelSpinner.setEnabled(true);
+		        calculateCorrelationButton.setEnabled(true);
+		        clearChartButton.setEnabled(true);
+		        
+		        testButton.setEnabled(true);
+		        testLabel.setEnabled(true);
+		        testSpinner.setEnabled(true);
 			}
 		});
     	
@@ -220,9 +236,6 @@ public class GUI extends JFrame {
     	calculateCorrelationButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-//				JOptionPane.showMessageDialog(GUI1.this, "A basic JOptionPane message dialog");
-				
-	
 				Main.dlugosc_przesuniecia_k = (Integer) differenceSpinner.getValue();
 				Main.dlugosc_okna_czasowego_n = (Integer) kSpinner.getValue();
 				Main.czas_poczatkowy_t = (Integer) startPointSpinner.getValue();
@@ -247,7 +260,6 @@ public class GUI extends JFrame {
 				}			
 				else{
 					Main.calculateAutocorrelationForPixel();
-//					GUI1.progressFrame.close();
 				}
 			}
 		});
@@ -269,6 +281,9 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				chartDataPanel.removeAll();
 				Main.calculateAvgMeasurementForPixel();
+				timeForPixelLabel.setEnabled(true);
+				timeForPixelSpinner.setEnabled(true);
+				createPixelMapButton.setEnabled(true);
 			}
 		});
     	
@@ -281,13 +296,14 @@ public class GUI extends JFrame {
     	gridbag.setConstraints(differenceForAutocorrelationLabel, new GridBagConstraints(0, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(pixelLabel, new GridBagConstraints(0, 5, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(calculateCorrelationButton, new GridBagConstraints(0, 6, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(timeForPixelLabel, new GridBagConstraints(0, 7, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(createPixelMapButton, new GridBagConstraints(0, 8, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(testLabel, new GridBagConstraints(0, 9, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(testButton, new GridBagConstraints(0, 10, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(createPixelMapForAllTimeButton, new GridBagConstraints(0, 11, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(calculateAvgMeasurementForPixelButton,  new GridBagConstraints(0, 12, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(clearChartButton,  new GridBagConstraints(0, 13, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(clearChartButton,  new GridBagConstraints(0, 7, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(timeForPixelLabel, new GridBagConstraints(0, 8, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(createPixelMapButton, new GridBagConstraints(0, 9, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(createPixelMapForAllTimeButton, new GridBagConstraints(0, 10, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(calculateAvgMeasurementForPixelButton,  new GridBagConstraints(0, 11, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(testLabel, new GridBagConstraints(0, 12, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(testButton, new GridBagConstraints(0, 13, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));   	
+
     	
     	gridbag.setConstraints(kSpinner, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(kStartSpinner, new GridBagConstraints(1, 2, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
@@ -295,8 +311,8 @@ public class GUI extends JFrame {
     	gridbag.setConstraints(startPointSpinner, new GridBagConstraints(1, 3, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(differenceForAutocorrelationSpinner, new GridBagConstraints(1, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	gridbag.setConstraints(pixelSpinner, new GridBagConstraints(1, 5, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(timeForPixelSpinner, new GridBagConstraints(1, 7, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
-    	gridbag.setConstraints(testSpinner, new GridBagConstraints(1, 9, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(timeForPixelSpinner, new GridBagConstraints(1, 8, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	gridbag.setConstraints(testSpinner, new GridBagConstraints(1, 12, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	   	  
     	kSpinner.addChangeListener(new ChangeListener() {      
     		  public void stateChanged(ChangeEvent e) {
@@ -533,7 +549,9 @@ public class GUI extends JFrame {
 		    	if (result == JFileChooser.APPROVE_OPTION) {
 		    	    Main.file = fileChooser.getSelectedFile();
 		    	    System.out.println("plik from GUI: "+Main.file);
+		    	    Main.framesA = Main.loadFile();
 		    	}
+		    	calculateAvgMeasurementForPixelButton.setEnabled(true);
 			}
 		});
     	
@@ -678,25 +696,48 @@ public class GUI extends JFrame {
     
     public void addComponentsForAutocorelationForPixel(){
     	kLabel.setVisible(true);
+    	kLabel.setEnabled(false);
     	kSpinner.setVisible(true);
+    	kSpinner.setEnabled(false);
     	kStartLabel.setVisible(true);
+    	kStartLabel.setEnabled(false);
     	kStartSpinner.setVisible(true);
+    	kStartSpinner.setEnabled(false);
         differenceLabel.setVisible(true);
+        differenceLabel.setEnabled(false);
         differenceSpinner.setVisible(true);
+        differenceSpinner.setEnabled(false);
         startPointLabel.setVisible(true);
+        startPointLabel.setEnabled(false);
         startPointSpinner.setVisible(true);
+        startPointSpinner.setEnabled(false);
+        differenceForAutocorrelationLabel.setVisible(true);
+        differenceForAutocorrelationLabel.setEnabled(false);
+        differenceForAutocorrelationSpinner.setVisible(true);
+        differenceForAutocorrelationSpinner.setEnabled(false);
         pixelLabel.setVisible(true);
+        pixelLabel.setEnabled(false);
         pixelSpinner.setVisible(true);
+        pixelSpinner.setEnabled(false);
         timeForPixelLabel.setVisible(true);
+        timeForPixelLabel.setEnabled(false);
         timeForPixelSpinner.setVisible(true);
+        timeForPixelSpinner.setEnabled(false);
         calculateCorrelationButton.setVisible(true);
+        calculateCorrelationButton.setEnabled(false);
         createPixelMapButton.setVisible(true);   
-        createPixelMapForAllTimeButton.setVisible(true);
-        testLabel.setVisible(true);      
+        createPixelMapButton.setEnabled(false);
+//        createPixelMapForAllTimeButton.setVisible(true);
+        testLabel.setVisible(true);    
+        testLabel.setEnabled(false);
         testButton.setVisible(true);
+        testButton.setEnabled(false);
         testSpinner.setVisible(true);
+        testSpinner.setEnabled(false);
         calculateAvgMeasurementForPixelButton.setVisible(true);
+        calculateAvgMeasurementForPixelButton.setEnabled(false);
         clearChartButton.setVisible(true);
+        clearChartButton.setEnabled(false);
         
         tabbedPanel.removeAll();
         tabbedPanel.addTab("Przebieg", chartDataPanel);

@@ -84,6 +84,7 @@ public class FileUtils {
 			        	String[] n = line.split(",");
 			        	for(String k:n){
 			        		if(k.trim().length()>0){
+//			        			System.out.println("k: "+k+"\n");
 			        			float tmp =  Float.parseFloat(k);
 //			        			System.out.println(tmp);
 			        			if(tmp>1){
