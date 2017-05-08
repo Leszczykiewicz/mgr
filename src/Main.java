@@ -1033,6 +1033,7 @@ public class Main {
 		GUI.tabbedPanel.setSelectedComponent(GUI.allPanel);
 		closeLoadingFrame();
 	}
+	
 	public static void calculateForPixel(){
 		
 		FileUtils fu = new FileUtils();

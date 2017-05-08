@@ -48,6 +48,9 @@ public class GUI extends JFrame {
     public static JPanel chartAllPanel = new JPanel();
     public static JPanel allPanel = new JPanel();
     public static JPanel resultPanel;
+    public static JPanel configurationPanel;
+    public static JPanel generateAvgMeasurementPanel;
+    public static JPanel generatePixelMapPanel;
     
     public static JPanel pixelPanel = new JPanel();
     public static JPanel squarePanel = new JPanel();
@@ -114,7 +117,7 @@ public class GUI extends JFrame {
 //        panel konfiguracyjny (wszystkie przyciski)
 //      -----------------------------------------------------------------------------------
                 
-        JPanel configurationPanel = new JPanel();
+       configurationPanel = new JPanel();
         
 //    -----------------------------------------------------------------------------------
 //      ca³a prawa czêœæ (tam gdzie s¹ zak³adki)
@@ -144,7 +147,7 @@ public class GUI extends JFrame {
 //      Panel na kontrolki do generowania mapy pixeli
 //    -----------------------------------------------------------------------------------
                
-        JPanel generatePixelMapPanel = new JPanel();
+        generatePixelMapPanel = new JPanel();
         GridBagLayout gridbag_generatePixelMapPanel = new GridBagLayout();
         generatePixelMapPanel.setLayout(gridbag_generatePixelMapPanel);
         generatePixelMapPanel.setBorder(BorderFactory.createTitledBorder(null, "Mapa pikseli", TitledBorder.LEFT, TitledBorder.TOP, new Font("sans Serif", Font.PLAIN, 11), Color.BLACK));
@@ -153,7 +156,7 @@ public class GUI extends JFrame {
 //      Panel na kontrolki do generowania œredniego przebiegu
 //    -----------------------------------------------------------------------------------
                
-        JPanel generateAvgMeasurementPanel = new JPanel();
+        generateAvgMeasurementPanel = new JPanel();
         GridBagLayout gridbag_generateAvgMeasurementPanel = new GridBagLayout();
         generateAvgMeasurementPanel.setLayout(gridbag_generateAvgMeasurementPanel);
         generateAvgMeasurementPanel.setBorder(BorderFactory.createTitledBorder(null, "Przebieg œredni", TitledBorder.LEFT, TitledBorder.TOP, new Font("sans Serif", Font.PLAIN, 11), Color.BLACK));
@@ -597,7 +600,48 @@ public class GUI extends JFrame {
 		    	    System.out.println("plik from GUI: "+Main.file);
 		    	    Main.framesA = Main.loadFile();
 		    	}
-		    	calculateAvgMeasurementForPixelButton.setEnabled(true);
+		    	if(Main.isPixel){
+		    		if(Main.isAutocorrelation){
+		    			calculateAvgMeasurementForPixelButton.setEnabled(true);
+		    		}
+		    		else{
+		    			kLabel.setEnabled(true);
+		    	    	kSpinner.setEnabled(true);
+		    	        differenceLabel.setEnabled(true);
+		    	        differenceSpinner.setEnabled(true);
+		    	        startPointLabel.setEnabled(true);
+		    	        startPointSpinner.setEnabled(true);
+		    	        pixelLabel.setEnabled(true);
+		    	        pixelSpinner.setEnabled(true);
+		    	        calculateCorrelationButton.setEnabled(true);       
+		    	        testLabel.setEnabled(true);      
+		    	        testButton.setEnabled(true);
+		    	        testSpinner.setEnabled(true);
+		    		}
+		    		
+		    	}
+		    	else{
+		    		System.out.println("vektor odklik");
+		    		kLabel.setEnabled(true);
+			    	kSpinner.setEnabled(true);
+			    	kStartLabel.setEnabled(true);
+			    	kStartSpinner.setEnabled(true);
+			        differenceLabel.setEnabled(true);
+			        differenceSpinner.setEnabled(true);
+			        startPointLabel.setEnabled(true);
+			        startPointSpinner.setEnabled(true);
+			        differenceForAutocorrelationLabel.setEnabled(true);
+			        differenceForAutocorrelationSpinner.setEnabled(true);
+			        pixelLabel.setEnabled(true);
+			        pixelSpinner.setEnabled(true);
+			        calculateCorrelationButton.setEnabled(true);
+			        clearChartButton.setEnabled(true);
+			        
+			        testButton.setEnabled(true);
+			        testLabel.setEnabled(true);
+			        testSpinner.setEnabled(true);
+		    	}
+		    	
 			}
 		});
     	
@@ -629,12 +673,8 @@ public class GUI extends JFrame {
         configurationPanel.add(calculateTypePanel);
         configurationPanel.add(operationTypePanel);
         configurationPanel.add(inputFilePanel);
-        configurationPanel.add(generateAvgMeasurementPanel);
-        configurationPanel.add(generatePixelMapPanel);
         configurationPanel.add(settingsPanel);
         configurationPanel.add(testCorrelationPanel);
-
-        
         
        
         resultPanel.setLayout(new BorderLayout());
@@ -795,6 +835,8 @@ public class GUI extends JFrame {
         clearChartButton.setVisible(true);
         clearChartButton.setEnabled(false);
         
+        configurationPanel.add(generatePixelMapPanel);
+        configurationPanel.add(generateAvgMeasurementPanel);
         tabbedPanel.removeAll();
         tabbedPanel.addTab("Przebieg", chartDataPanel);
         tabbedPanel.addTab("Pixel", pixelPanel);
