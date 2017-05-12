@@ -77,6 +77,9 @@ public class GUI extends JFrame {
     public static JButton createPixelMapForAllTimeButton;
     public static JButton calculateAvgMeasurementForPixelButton;
     public static JButton clearChartButton;
+    public static JButton filesButton = new JButton("Wybierz plik");
+    public static JButton filesAButton = new JButton("P³aszczyzna A");
+    public static JButton filesBButton = new JButton("P³aszczyzna B");
 	
     public static JSpinner kSpinner;
     public static JSpinner kStartSpinner;
@@ -587,7 +590,7 @@ public class GUI extends JFrame {
         fileTypeGroup.add(generateFile);
         fileTypeGroup.add(pixelFile);
         
-    	JButton filesButton = new JButton("Wybierz plik");
+//    	filesButton = new JButton("Wybierz plik");
     	filesButton.addActionListener(new ActionListener(
     			) {
 			
@@ -605,6 +608,11 @@ public class GUI extends JFrame {
 		    			calculateAvgMeasurementForPixelButton.setEnabled(true);
 		    		}
 		    		else{
+		    			System.out.println("tutaj");
+		    	        timeForPixelLabel.setEnabled(true);
+		    	        timeForPixelSpinner.setEnabled(true);
+		    	        createPixelMapButton.setEnabled(true); 
+		    	        
 		    			kLabel.setEnabled(true);
 		    	    	kSpinner.setEnabled(true);
 		    	        differenceLabel.setEnabled(true);
@@ -645,18 +653,149 @@ public class GUI extends JFrame {
 			}
 		});
     	
+    	filesAButton = new JButton("P³aszczyzna A");
+    	filesAButton.addActionListener(new ActionListener(
+    			) {
+			
+			public void actionPerformed(ActionEvent e) {		
+				JFileChooser fileChooser = new JFileChooser();
+		    	fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		    	int result = fileChooser.showOpenDialog(GUI.this);
+		    	if (result == JFileChooser.APPROVE_OPTION) {
+		    	    Main.file = fileChooser.getSelectedFile();
+		    	    System.out.println("plik from GUI: "+Main.file);
+		    	    Main.framesA = Main.loadFile();
+		    	}
+		    	if(Main.isPixel){
+		    		if(Main.isAutocorrelation){
+		    			calculateAvgMeasurementForPixelButton.setEnabled(true);
+		    		}
+		    		else{
+		    			calculateAvgMeasurementForPixelButton.setEnabled(true);
+		    			System.out.println("tutaj");
+		    	        timeForPixelLabel.setEnabled(true);
+		    	        timeForPixelSpinner.setEnabled(true);
+		    	        createPixelMapButton.setEnabled(true); 
+		    	        
+		    			kLabel.setEnabled(true);
+		    	    	kSpinner.setEnabled(true);
+		    	        differenceLabel.setEnabled(true);
+		    	        differenceSpinner.setEnabled(true);
+		    	        startPointLabel.setEnabled(true);
+		    	        startPointSpinner.setEnabled(true);
+		    	        pixelLabel.setEnabled(true);
+		    	        pixelSpinner.setEnabled(true);
+		    	        calculateCorrelationButton.setEnabled(true);       
+		    	        testLabel.setEnabled(true);      
+		    	        testButton.setEnabled(true);
+		    	        testSpinner.setEnabled(true);
+		    		}
+		    		
+		    	}
+		    	else{
+		    		System.out.println("vektor odklik");
+		    		kLabel.setEnabled(true);
+			    	kSpinner.setEnabled(true);
+			    	kStartLabel.setEnabled(true);
+			    	kStartSpinner.setEnabled(true);
+			        differenceLabel.setEnabled(true);
+			        differenceSpinner.setEnabled(true);
+			        startPointLabel.setEnabled(true);
+			        startPointSpinner.setEnabled(true);
+			        differenceForAutocorrelationLabel.setEnabled(true);
+			        differenceForAutocorrelationSpinner.setEnabled(true);
+			        pixelLabel.setEnabled(true);
+			        pixelSpinner.setEnabled(true);
+			        calculateCorrelationButton.setEnabled(true);
+			        clearChartButton.setEnabled(true);
+			        
+			        testButton.setEnabled(true);
+			        testLabel.setEnabled(true);
+			        testSpinner.setEnabled(true);
+		    	}
+		    	
+			}
+		});
+    	
+    	filesBButton = new JButton("P³aszczyzna B");
+    	filesBButton.addActionListener(new ActionListener(
+    			) {
+			
+			public void actionPerformed(ActionEvent e) {		
+				JFileChooser fileChooser = new JFileChooser();
+		    	fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		    	int result = fileChooser.showOpenDialog(GUI.this);
+		    	if (result == JFileChooser.APPROVE_OPTION) {
+		    	    Main.file = fileChooser.getSelectedFile();
+		    	    System.out.println("plik from GUI: "+Main.file);
+		    	    Main.framesB = Main.loadFile();
+		    	}
+		    	if(Main.isPixel){
+		    		if(Main.isAutocorrelation){
+		    			calculateAvgMeasurementForPixelButton.setEnabled(true);
+		    		}
+		    		else{
+		    			System.out.println("tutaj");
+		    	        timeForPixelLabel.setEnabled(true);
+		    	        timeForPixelSpinner.setEnabled(true);
+		    	        createPixelMapButton.setEnabled(true); 
+		    	        
+		    			kLabel.setEnabled(true);
+		    	    	kSpinner.setEnabled(true);
+		    	        differenceLabel.setEnabled(true);
+		    	        differenceSpinner.setEnabled(true);
+		    	        startPointLabel.setEnabled(true);
+		    	        startPointSpinner.setEnabled(true);
+		    	        pixelLabel.setEnabled(true);
+		    	        pixelSpinner.setEnabled(true);
+		    	        calculateCorrelationButton.setEnabled(true);       
+		    	        testLabel.setEnabled(true);      
+		    	        testButton.setEnabled(true);
+		    	        testSpinner.setEnabled(true);
+		    		}
+		    		
+		    	}
+		    	else{
+		    		System.out.println("vektor odklik");
+		    		kLabel.setEnabled(true);
+			    	kSpinner.setEnabled(true);
+			    	kStartLabel.setEnabled(true);
+			    	kStartSpinner.setEnabled(true);
+			        differenceLabel.setEnabled(true);
+			        differenceSpinner.setEnabled(true);
+			        startPointLabel.setEnabled(true);
+			        startPointSpinner.setEnabled(true);
+			        differenceForAutocorrelationLabel.setEnabled(true);
+			        differenceForAutocorrelationSpinner.setEnabled(true);
+			        pixelLabel.setEnabled(true);
+			        pixelSpinner.setEnabled(true);
+			        calculateCorrelationButton.setEnabled(true);
+			        clearChartButton.setEnabled(true);
+			        
+			        testButton.setEnabled(true);
+			        testLabel.setEnabled(true);
+			        testSpinner.setEnabled(true);
+		    	}
+		    	
+			}
+		});
+    	
+    	
        	inputFileGridbag.setConstraints(normalFile, new GridBagConstraints(0, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(manchesterFile, new GridBagConstraints(1, 0, 1, 1, 1, 2, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(generateFile, new GridBagConstraints(2, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(pixelFile, new GridBagConstraints(3, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	inputFileGridbag.setConstraints(filesButton, new GridBagConstraints(0, 1, 4, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	inputFileGridbag.setConstraints(filesAButton, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	inputFileGridbag.setConstraints(filesBButton, new GridBagConstraints(2, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	
     	inputFilePanel.add(normalFile);
     	inputFilePanel.add(manchesterFile);
     	inputFilePanel.add(generateFile);
     	inputFilePanel.add(pixelFile);
     	inputFilePanel.add(filesButton);
-        
+        inputFilePanel.add(filesAButton);
+        inputFilePanel.add(filesBButton);
 //-----------------------------------------------------------------------------------------------------------------
     	       
     	GridBagLayout configurationGridbag = new GridBagLayout();
@@ -822,6 +961,10 @@ public class GUI extends JFrame {
         calculateCorrelationButton.setVisible(true);
         calculateCorrelationButton.setEnabled(false);
         createPixelMapButton.setVisible(true);   
+        filesButton.setVisible(true);        
+        
+        filesAButton.setVisible(false);
+        filesBButton.setVisible(false);
         createPixelMapButton.setEnabled(false);
 //        createPixelMapForAllTimeButton.setVisible(true);
         testLabel.setVisible(true);    
@@ -834,6 +977,7 @@ public class GUI extends JFrame {
         calculateAvgMeasurementForPixelButton.setEnabled(false);
         clearChartButton.setVisible(true);
         clearChartButton.setEnabled(false);
+        
         
         configurationPanel.add(generatePixelMapPanel);
         configurationPanel.add(generateAvgMeasurementPanel);
@@ -869,7 +1013,10 @@ public class GUI extends JFrame {
         testButton.setVisible(true);
         testSpinner.setVisible(true);
         clearChartButton.setVisible(true);
+        filesButton.setVisible(true);        
         
+        filesAButton.setVisible(false);
+        filesBButton.setVisible(false);
         pixelLabel.setVisible(false);
         pixelSpinner.setVisible(false);
         timeForPixelLabel.setVisible(false);
@@ -901,20 +1048,27 @@ public class GUI extends JFrame {
         testLabel.setVisible(true);      
         testButton.setVisible(true);
         testSpinner.setVisible(true);
+        filesAButton.setVisible(true);
+        filesBButton.setVisible(true);
         
-        timeForPixelLabel.setVisible(false);
-        timeForPixelSpinner.setVisible(false);
-        createPixelMapButton.setVisible(false); 
+        filesButton.setVisible(false);        
+        timeForPixelLabel.setVisible(true);
+        timeForPixelSpinner.setVisible(true);
+        createPixelMapButton.setVisible(true); 
+        calculateAvgMeasurementForPixelButton.setVisible(true);
+        
+        
         createPixelMapForAllTimeButton.setVisible(false);
     	kStartLabel.setVisible(false);
     	kStartSpinner.setVisible(false);
-    	calculateAvgMeasurementForPixelButton.setVisible(false);
     	clearChartButton.setVisible(false);
     	
         tabbedPanel.removeAll();
         tabbedPanel.addTab("Przebieg", chartDataPanel);
+        tabbedPanel.addTab("Pixel", pixelPanel);
         tabbedPanel.addTab("Test", chartTestPanel);
         tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
+        tabbedPanel.addTab("Przesuniêcie w czasie", chartCorrelationInTimePanel);
     }
     
     public void addComponentForSpeedForVector(){
@@ -928,7 +1082,10 @@ public class GUI extends JFrame {
         testLabel.setVisible(true);      
         testButton.setVisible(true);
         testSpinner.setVisible(true);
+        filesAButton.setVisible(true);
+        filesBButton.setVisible(true);
         
+        filesButton.setVisible(false);
         pixelLabel.setVisible(false);
         pixelSpinner.setVisible(false);
         timeForPixelLabel.setVisible(false);

@@ -53,6 +53,7 @@ public class Main {
 	public static ArrayList<Statistics> statistic_for_t;
 	public static ArrayList<Double> stdForAtuocorrelation;
 	public static ArrayList<Frame> framesA;
+	public static ArrayList<Frame> framesB;
 	public static ArrayList<Integer> pixelsToAutocorrelation = new ArrayList<Integer>();
 	public static ChartUtils chart = new ChartUtils();
 	
@@ -780,7 +781,7 @@ public class Main {
 	public static void createPixelMap(){
 		createLoadingFrame();
 		pixelsToAutocorrelation.clear();
-		framesA = loadFile();
+		//framesA = loadFile();
 	
 		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
 		
@@ -1038,15 +1039,15 @@ public class Main {
 		
 		FileUtils fu = new FileUtils();
 //		String pomiarA = fu.openFile("f40_v800_hor.aim");
-		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");
-		ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
-			      
+////		String pomiarA = fu.openFile("plik_15_5_100Hz_planeA_OK.txt");
+//		ArrayList<Frame> framesA = fu.getFramesForPixel(pomiarA, 1024);
+//			      
 //	    String pomiarB = fu.openFile("f40_v800_par.aim");
-		String pomiarB = fu.openFile("plik_15_5_100Hz_planeB_OK.txt");
-		ArrayList<Frame> framesB = fu.getFramesForPixel(pomiarB, 1024);
+////		String pomiarB = fu.openFile("plik_15_5_100Hz_planeB_OK.txt");
+//		ArrayList<Frame> framesB = fu.getFramesForPixel(pomiarB, 1024);
 	
 		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
-		float[][] pixelsB = new float[framesA.get(0).getC().length][framesA.size()];
+		float[][] pixelsB = new float[framesB.get(0).getC().length][framesB.size()];
 
 		int id = 0;
 		for(int i=0; i<framesA.get(0).getC().length; i++){
@@ -1055,24 +1056,44 @@ public class Main {
 				pixelsB[id][j] = framesB.get(j).getC()[i];
 			}
 			id++;
+		}
+		
+		
+		ArrayList<Frame> framesToSpeed = new ArrayList<Frame>();
+		
+		for(Frame f: framesA){
+			Frame frame = new Frame();
+			frame.setTime(f.getTime());
+			frame.setAvgC(0);
+			for(int i : pixelsToAutocorrelation){		
+				frame.setAvgC(frame.getAvgC()+f.getC()[i]);
 			}
+			frame.setAvgC(frame.getAvgC()/pixelsToAutocorrelation.size());
+			framesToSpeed.add(frame);
+		}
+		
+		try {
+			createChartForFrames(framesToSpeed);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
-			double[][] correlationTable = new double [32][32];
-			int a = 0, b=0;
+		double[][] correlationTable = new double [32][32];
+		int a = 0, b=0;
 //			System.out.println("ilosc pikseli: "+pixelsA.length);
-			for(int i=0; i<pixelsA.length; i++){
-				CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);    		     
-			      Arrays.sort(correlation);
-			      correlationTable[a][b] = correlation[correlation.length-1].id;
-			      if(b<31){
-			    	  b++;
+		for(int i=0; i<pixelsA.length; i++){
+			CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);    		     
+		      Arrays.sort(correlation);
+		      correlationTable[a][b] = correlation[correlation.length-1].id;
+		      if(b<31){
+		    	  b++;
 //			    	  System.out.print(" "+correlation[correlation.length-1].id+" ");
-			      }else{
+		      }else{
 //			    	  System.out.print("\n");
-			    	  b=0;
-			    	  a++;
-			      }
-			}
+		    	  b=0;
+		    	  a++;
+		      }
+		}
 			
 			String correlationTableForChart = "";
 			for(int i = 0; i<correlationTable.length; i++)
