@@ -7,11 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +46,8 @@ public class Main {
 	public static boolean isPixel = false;
 	public static boolean isGenerate = false;
 	public static File file;
+	public static File fileA;
+	public static File fileB;
 	public static ArrayList<CorrelationObject[]> correlationForTest;
 	public static int[] correlations;
 	public static ArrayList<Statistics> statistic_for_t;
@@ -70,32 +72,32 @@ public class Main {
 	
 	public static void test(){
 		correlationForTest = new ArrayList<CorrelationObject[]>();
-		FileUtils fu = new FileUtils();
-		String pomiar = fu.loadFile(file);
-		ArrayList<Frame> frames;
-		ArrayList<Frame> framesA = new ArrayList<Frame>();
-		
-		if(isManchester){
-			frames = fu.getFramesForManchester(pomiar, 28);
-			framesA = frames;
-		}
-		else if(isGenerate){
-			frames = fu.getFramesForGenerate(pomiar);
-			framesA = frames;
-		}
-		else{
-			frames = fu.getFrames(pomiar, 28);
-			
-			int i = 0, idA =0;
-			for(Frame f : frames){
-				if(i%2 == 0){
-					f.setTime(idA);
-					framesA.add(f);
-					idA++;
-				}
-				i++;
-			}		
-		}
+//		FileUtils fu = new FileUtils();
+//		String pomiar = fu.loadFile(file);
+//		ArrayList<Frame> frames;
+//		ArrayList<Frame> framesA = new ArrayList<Frame>();
+//		
+//		if(isManchester){
+//			frames = fu.getFramesForManchester(pomiar, 28);
+//			framesA = frames;
+//		}
+//		else if(isGenerate){
+//			frames = fu.getFramesForGenerate(pomiar);
+//			framesA = frames;
+//		}
+//		else{
+//			frames = fu.getFrames(pomiar, 28);
+//			
+//			int i = 0, idA =0;
+//			for(Frame f : frames){
+//				if(i%2 == 0){
+//					f.setTime(idA);
+//					framesA.add(f);
+//					idA++;
+//				}
+//				i++;
+//			}		
+//		}
 				
 		try {
 			createChartForFrames(framesA);
@@ -1133,7 +1135,11 @@ public class Main {
 			id++;
 		}
 		
-		createChartForFrames(framesAToSpeed, framesBToSpeed);  //czyli teraz wykres mamy tylko dla danego piksela (no jednak fajnie jakby tu daæ obu p³aszczyzn wykresy...)
+		for(int i=0; i<framesAToSpeed.size(); i++)
+		{
+			System.out.println("A: "+framesAToSpeed.get(i).getAvgC()+" B: "+framesBToSpeed.get(i).getAvgC());
+		}
+		createChartForFrames(framesAToSpeed, framesBToSpeed);  
 //------------------------------------------------------------------------------------------------------------
 //		correlations = new int[framesToAutocorrelation.size()-dlugosc_okna_czasowego_n];
 //		CorrelationObject[] correlations_for_test_chart = new CorrelationObject[framesToAutocorrelation.size()-dlugosc_okna_czasowego_n];
@@ -1280,16 +1286,30 @@ public class Main {
 	  	{
 	  		corr_to_file+=c+", ";
 	  	}
-	  		fu.saveToFile("przesuniecia.txt", corr_to_file);
+	  
+	  	corr_to_file+="\n";
+	  	BufferedWriter bw = null;
+		FileWriter fw = null;
+	  	File file = new File("przesuniecia.txt");
+	  	fw = new FileWriter(file.getAbsoluteFile(), true);
+		bw = new BufferedWriter(fw);
+		bw.write(corr_to_file);
+		
+		bw.close();
+		fw.close();
+		
 	  		
+		
+//		fu.saveToFile("przesuniecia.txt", corr_to_file);
 	  		
-	  		double[][] toFile = new double[31][10700];
+//--------------------fragment do generowania wykresu dla 32 pikseli w czasie	  		
+	  		double[][] toFile = new double[32][10700];
 	  		
-	  		File file = new File("przesuniecia_razem.txt");
+	  		File file2 = new File("przesuniecia_razem.txt");
 	  		FileInputStream fis = null;
 	        try {
-	            fis = new FileInputStream(file);
-	            byte[] data = new byte[(int) file.length()];
+	            fis = new FileInputStream(file2);
+	            byte[] data = new byte[(int) file2.length()];
 	            fis.read(data);
 	            fis.close();
 	            String str = new String(data, "UTF-8");
@@ -1336,7 +1356,7 @@ public class Main {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		      
+//----------------------------------		      
 	}
 	
 	
