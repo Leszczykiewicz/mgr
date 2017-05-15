@@ -12,6 +12,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -346,7 +347,12 @@ public class GUI extends JFrame {
 				}
 				else if(!Main.isVector && !Main.isAutocorrelation){
 					System.out.println("pixel i predkosc");
-					Main.calculateForPixel();
+					try {
+						Main.calculateForPixel();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}			
 				else{
 					Main.calculateAutocorrelationForPixel();
@@ -683,6 +689,8 @@ public class GUI extends JFrame {
 		    	        differenceSpinner.setEnabled(true);
 		    	        startPointLabel.setEnabled(true);
 		    	        startPointSpinner.setEnabled(true);
+		    	        kStartLabel.setEnabled(true);
+		    	        kStartSpinner.setEnabled(true);
 		    	        pixelLabel.setEnabled(true);
 		    	        pixelSpinner.setEnabled(true);
 		    	        calculateCorrelationButton.setEnabled(true);       
@@ -1042,6 +1050,8 @@ public class GUI extends JFrame {
         differenceSpinner.setVisible(true);
         startPointLabel.setVisible(true);
         startPointSpinner.setVisible(true);
+        kStartLabel.setVisible(true);
+        kStartSpinner.setVisible(true);
         pixelLabel.setVisible(true);
         pixelSpinner.setVisible(true);
         calculateCorrelationButton.setVisible(true);       
@@ -1059,8 +1069,6 @@ public class GUI extends JFrame {
         
         
         createPixelMapForAllTimeButton.setVisible(false);
-    	kStartLabel.setVisible(false);
-    	kStartSpinner.setVisible(false);
     	clearChartButton.setVisible(false);
     	
         tabbedPanel.removeAll();

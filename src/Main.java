@@ -7,20 +7,18 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.Border;
@@ -688,28 +686,77 @@ public class Main {
 	}
 	
 	public static CorrelationObject[] calculateCorrelationForPixel(float[] framesA, float[] framesB){
-		temp++;
-		CorrelationObject[] correlation = new CorrelationObject[dlugosc_okna_czasowego_n];
-		 for(int i=dlugosc_przesuniecia_k; i<dlugosc_okna_czasowego_n+dlugosc_przesuniecia_k; i++){
-
+//		System.out.println("wywo³anie "+czas_poczatkowy_t);
+//		temp++;
+//		CorrelationObject[] correlation = new CorrelationObject[dlugosc_przesuniecia_k-k_poczatkowe];
+//		 for(int i=k_poczatkowe; i<k_poczatkowe+dlugosc_przesuniecia_k; i++){
+//
+//	    	  float[] t1 = new float[dlugosc_okna_czasowego_n]; 
+//	    	  float[] t2 = new float[dlugosc_okna_czasowego_n];
+//	    	  int id = 0;
+//	    	  
+//	    	  for(int j=czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+czas_poczatkowy_t; j++){
+//	    		  t1[id] = framesA[j];
+//	    		  id++;
+//	    	  }
+//	    	  id = 0;
+//	    	  for(int j=i+czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+i+czas_poczatkowy_t; j++){
+////	    		  System.out.println(j);
+//	    		  t2[id] = framesB[j];
+//	    		  id++;
+//	    	  }
+//	    	  PearsonCorrelation pc = new PearsonCorrelation(t1, t2);
+//	    	  correlation[i-k_poczatkowe] = new CorrelationObject(pc.correlation, i);
+//		 }
+//	    	  return correlation;
+		
+//   ------------------------------------------------------------------------------------------
+//		CorrelationObject[] correlation = new CorrelationObject[frames.size()-dlugosc_okna_czasowego_n*2-czas_poczatkowy_t-1];
+//		 for(int i=1; i<frames.size()-dlugosc_okna_czasowego_n*2-czas_poczatkowy_t; i++){
+		CorrelationObject[] correlation;
+//		System.out.println(czas_poczatkowy_t);
+		if(dlugosc_przesuniecia_k + dlugosc_okna_czasowego_n> framesA.length-czas_poczatkowy_t)
+		{
+		//	System.out.println("if");
+//			 correlation = new CorrelationObject[frames.size()-dlugosc_okna_czasowego_n*2-czas_poczatkowy_t];
+				correlation = new CorrelationObject[1];
+				correlation[0] = new CorrelationObject(0, 0);
+				return correlation;
+		}
+		else{
+			correlation = new CorrelationObject[dlugosc_przesuniecia_k];
+				
+		 for(int i=0; i<dlugosc_przesuniecia_k; i++){
+//			 if(i> frames.size()-dlugosc_okna_czasowego_n*2-czas_poczatkowy_t){
+//				// System.out.println("Break");
+//				 break;
+//			 }
+		//	  System.out.println(correlation.length);
 	    	  float[] t1 = new float[dlugosc_okna_czasowego_n];
 	    	  float[] t2 = new float[dlugosc_okna_czasowego_n];
 	    	  int id = 0;
 	    	  
 	    	  for(int j=czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+czas_poczatkowy_t; j++){
-	    		  t1[id] = framesA[j];
-	    		  id++;
-	    	  }
+    		  t1[id] = framesA[j];
+    		  id++;
+    	  }
 	    	  id = 0;
 	    	  for(int j=i+czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+i+czas_poczatkowy_t; j++){
 	    		  t2[id] = framesB[j];
 	    		  id++;
 	    	  }
+//	    	  System.out.println(i);
 	    	  PearsonCorrelation pc = new PearsonCorrelation(t1, t2);
-	    	  correlation[i-dlugosc_przesuniecia_k] = new CorrelationObject(pc.correlation, i);
+	    	  correlation[i] = new CorrelationObject(pc.correlation, i);
+//	    	  System.out.println("c: "+ correlation[i-1].id + " " + i);
 		 }
 	    	  return correlation;
+		}
 	}
+	
+	
+	
+	
 	public static <T> boolean contains(final T[] array, final T v) {
 	    for (final T e : array)
 	        if (e == v || v != null && v.equals(e))
@@ -1035,7 +1082,7 @@ public class Main {
 		closeLoadingFrame();
 	}
 	
-	public static void calculateForPixel(){
+	public static void calculateForPixel() throws IOException{
 		
 		FileUtils fu = new FileUtils();
 //		String pomiarA = fu.openFile("f40_v800_hor.aim");
@@ -1046,21 +1093,11 @@ public class Main {
 ////		String pomiarB = fu.openFile("plik_15_5_100Hz_planeB_OK.txt");
 //		ArrayList<Frame> framesB = fu.getFramesForPixel(pomiarB, 1024);
 	
-		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
-		float[][] pixelsB = new float[framesB.get(0).getC().length][framesB.size()];
-
-		int id = 0;
-		for(int i=0; i<framesA.get(0).getC().length; i++){
-			for(int j=0; j<framesA.size(); j++){	
-				pixelsA[id][j] = framesA.get(j).getC()[i];
-				pixelsB[id][j] = framesB.get(j).getC()[i];
-			}
-			id++;
-		}
+				
+		ArrayList<Frame> framesAToSpeed = new ArrayList<Frame>();
+		ArrayList<Frame> framesBToSpeed = new ArrayList<Frame>();
 		
-		
-		ArrayList<Frame> framesToSpeed = new ArrayList<Frame>();
-		
+		System.out.println("rozmiar zapisanych indeksów pixeli: "+pixelsToAutocorrelation.size());
 		for(Frame f: framesA){
 			Frame frame = new Frame();
 			frame.setTime(f.getTime());
@@ -1068,85 +1105,237 @@ public class Main {
 			for(int i : pixelsToAutocorrelation){		
 				frame.setAvgC(frame.getAvgC()+f.getC()[i]);
 			}
-			frame.setAvgC(frame.getAvgC()/pixelsToAutocorrelation.size());
-			framesToSpeed.add(frame);
+			frame.setAvgC(frame.getAvgC()/pixelsToAutocorrelation.size());  //pixelsToAutocorrelation to tablica indexów zaznaczonych pixeli. Nie zmieniam na razie nazwy TO DO na przysz³oœæ
+			framesAToSpeed.add(frame);
 		}
 		
-		try {
-			createChartForFrames(framesToSpeed);
+		for(Frame f: framesB){
+			Frame frame = new Frame();
+			frame.setTime(f.getTime());
+			frame.setAvgC(0);
+			for(int i : pixelsToAutocorrelation){		
+				frame.setAvgC(frame.getAvgC()+f.getC()[i]);
+			}
+			frame.setAvgC(frame.getAvgC()/pixelsToAutocorrelation.size());  //pixelsToAutocorrelation to tablica indexów zaznaczonych pixeli. Nie zmieniam na razie nazwy TO DO na przysz³oœæ
+			framesBToSpeed.add(frame);
+		}
+		
+
+		float[][] pixelsA = new float[framesA.get(0).getC().length][framesA.size()];
+		float[][] pixelsB = new float[framesB.get(0).getC().length][framesB.size()];
+
+		int id = 0;
+		for(int i=0; i<framesA.get(0).getC().length; i++){
+			for(int j=0; j<framesAToSpeed.size(); j++){	
+				pixelsA[id][j] = framesA.get(j).getC()[i];
+				pixelsB[id][j] = framesB.get(j).getC()[i];
+			}
+			id++;
+		}
+		
+		createChartForFrames(framesAToSpeed, framesBToSpeed);  //czyli teraz wykres mamy tylko dla danego piksela (no jednak fajnie jakby tu daæ obu p³aszczyzn wykresy...)
+//------------------------------------------------------------------------------------------------------------
+//		correlations = new int[framesToAutocorrelation.size()-dlugosc_okna_czasowego_n];
+//		CorrelationObject[] correlations_for_test_chart = new CorrelationObject[framesToAutocorrelation.size()-dlugosc_okna_czasowego_n];
+//		statistic_for_t = new ArrayList<Statistics>();
+//		stdForAtuocorrelation = new ArrayList<Double>();
+//
+//  	  	id = 0;
+//  	  	int temp_czas_poczatkowy = czas_poczatkowy_t;
+//  	  	while(czas_poczatkowy_t < framesToAutocorrelation.size() - dlugosc_okna_czasowego_n*2-1){
+//  	  		CorrelationObject[] correlation_for_t = calculateAutocorrelation(framesToAutocorrelation);
+//
+//	  	  	if(czas_poczatkowy_t == przesuniecie_do_testow){
+//	  	  		correlations_for_test_chart = correlation_for_t;
+//	  	  		createChartForCorrelation(correlations_for_test_chart);
+//	  	  		}
+//	  	  correlationForTest.add(correlation_for_t);
+//	  	  if(k_poczatkowe<correlation_for_t.length){
+//	  		CorrelationObject[] correlation_for_sort = Arrays.copyOfRange(correlation_for_t, k_poczatkowe, correlation_for_t.length);
+//
+//	  		
+//  	  	correlations[czas_poczatkowy_t] = getMaxAutocorrelation(correlation_for_sort);
+//	  	  }
+//
+//  	  		czas_poczatkowy_t++;
+//  	  		statistic_for_t.add(calculateStatistic(framesToAutocorrelation));
+//  	  	}
+//  	  	czas_poczatkowy_t = temp_czas_poczatkowy;
+//  	  	id = 0;
+//  	  	while(czas_poczatkowy_t < correlations.length - dlugosc_okna_czasowego_dla_autokorelacji*2-1){
+//  	  		czas_poczatkowy_t++;
+//  	  		stdForAtuocorrelation.add(calculateAutocorrelationStd(correlations));
+//  		
+//  	  	}
+//---------------------------------------------------------------------------------------------
+  	  	correlations = new int[framesAToSpeed.size()-dlugosc_okna_czasowego_n];
+		int[] correlations_speed_for_test_chart = new int[framesAToSpeed.size() - dlugosc_okna_czasowego_n*2-1-dlugosc_przesuniecia_k];
+
+	  	id = 0;
+	  	int temp_czas_poczatkowy = czas_poczatkowy_t;
+	  	System.out.println(framesAToSpeed.size());
+	  	while(czas_poczatkowy_t < framesAToSpeed.size() - dlugosc_okna_czasowego_n*2-1-dlugosc_przesuniecia_k){
+  	  	
+	  	  	double[][] correlationTable = new double [32][32];
+			int a = 0, b=0;
+			
+//			CorrelationObject temp_correlation = new CorrelationObject(0, id);
+			int temp_speed = 0;
+			for(int i:pixelsToAutocorrelation){
+				CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);
+//				Arrays.sort(correlation);
+				temp_speed += getMaxAutocorrelation(correlation);	
+//				System.out.println(temp_correlation.value);
+			}
+			temp_speed /= pixelsToAutocorrelation.size();
+			
+			correlations_speed_for_test_chart[id] = temp_speed;
+			id++;
+			czas_poczatkowy_t++;
+	  	}
+			
+	  	czas_poczatkowy_t = temp_czas_poczatkowy;
+	  	
+	  	try {
+	  		System.out.println("rysujemy wykresik :)");
+			createCorrelationInTimeChart(correlations_speed_for_test_chart);
 		} catch (IOException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		
+//	//			System.out.println("ilosc pikseli: "+pixelsA.length);
+//			for(int i=0; i<pixelsA.length; i++){
+//				CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);    		     
+//			      Arrays.sort(correlation);
+//			      correlationTable[a][b] = correlation[correlation.length-1].id;
+//			      if(b<31){
+//			    	  b++;
+//	//			    	  System.out.print(" "+correlation[correlation.length-1].id+" ");
+//			      }else{
+//	//			    	  System.out.print("\n");
+//			    	  b=0;
+//			    	  a++;
+//			      }
+//			}
+// ten fragment generuje mapê pikseli przesuniêæ do pliku - chwilowo nie jest nam potrzebne			
+//				String correlationTableForChart = "";
+//				for(int i = 0; i<correlationTable.length; i++)
+//				{
+//					for(int j=0; j<correlationTable[0].length; j++){
+//						correlationTableForChart += " "+ correlationTable[i][j];
+//					}
+//					correlationTableForChart += "\n";
+//				}
+//				HeatChart map = new HeatChart(correlationTable);
+//	
+//				map.setTitle("Correlation pixel map");
+// 
+//			
+//			try {
+//				map.saveToFile(new File("correlation_pixel_map.png"));
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+// koniec fragmentu
 
-		double[][] correlationTable = new double [32][32];
-		int a = 0, b=0;
-//			System.out.println("ilosc pikseli: "+pixelsA.length);
-		for(int i=0; i<pixelsA.length; i++){
-			CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);    		     
-		      Arrays.sort(correlation);
-		      correlationTable[a][b] = correlation[correlation.length-1].id;
-		      if(b<31){
-		    	  b++;
-//			    	  System.out.print(" "+correlation[correlation.length-1].id+" ");
-		      }else{
-//			    	  System.out.print("\n");
-		    	  b=0;
-		    	  a++;
-		      }
-		}
+//			try {
+//				createChartForPixel(pixelsA[pixel], pixelsB[pixel]);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
-			String correlationTableForChart = "";
-			for(int i = 0; i<correlationTable.length; i++)
-			{
-				for(int j=0; j<correlationTable[0].length; j++){
-					correlationTableForChart += " "+ correlationTable[i][j];
-				}
-				correlationTableForChart += "\n";
-			}
-			HeatChart map = new HeatChart(correlationTable);
+//			createChartForCorrelation(calculateCorrelationForPixel(pixelsA[pixel], pixelsB[pixel]));
+			
+			
 
-			map.setTitle("Correlation pixel map");
+//			float[] t1 = new float[dlugosc_okna_czasowego_n];
+//			float[] t2 = new float[dlugosc_okna_czasowego_n];
+//	    	int id1 = 0;
+//	    	  
+//	    	for(int j=czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+czas_poczatkowy_t; j++){
+//	    		  t1[id1] = pixelsA[pixel][j];
+//	    		  id1++;
+//	    	}
+//	    	id1 = 0;
+//	    	for(int j=dlugosc_przesuniecia_k+czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+dlugosc_przesuniecia_k+czas_poczatkowy_t; j++){
+//	    		  t2[id1] = pixelsB[pixel][j];
+//	    		  id1++;
+//	    	}
+//	    	try {
+//				createTestChartForPixel(t1, t2);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//    	  
+//		    fu.saveToFile("A", framesA.toString());
+//		    fu.saveToFile("B", framesB.toString()); 
+//		    fu.saveToFile("correlation_map.txt", correlationTableForChart);
+	  	String corr_to_file = "";
+	  	for(int c : correlations_speed_for_test_chart)
+	  	{
+	  		corr_to_file+=c+", ";
+	  	}
+	  		fu.saveToFile("przesuniecia.txt", corr_to_file);
+	  		
+	  		
+	  		double[][] toFile = new double[31][10700];
+	  		
+	  		File file = new File("przesuniecia_razem.txt");
+	  		FileInputStream fis = null;
+	        try {
+	            fis = new FileInputStream(file);
+	            byte[] data = new byte[(int) file.length()];
+	            fis.read(data);
+	            fis.close();
+	            String str = new String(data, "UTF-8");
+	  		    
+	  		    int line_number = 0;
+	  		    for(String line: str.split("\n")){
+	  		    	if(!line.equals("") && !line.isEmpty()){
+	  		    		System.out.println(line);
+			  		    String tab[] = line.split(",");
+			  		    int d = tab.length;
+			  		    System.out.println(tab.length);
+			  		    double t[] = new double[10700];
+			  		    id = 0;
+			  		    for(int i=0; i<10700; i++){
+			  		    	String s = "";
+			  		    	if(i<tab.length)
+			  		    	{
+			  		    		s+=tab[i];
+			  		    	}
+			  		    	else{
+			  		    		s+="0";
+			  		    	}
+			  		    	if(!s.trim().equals("") && !s.trim().isEmpty()){
+			  		    		t[id] = Double.parseDouble(s.trim());
+			  		    		id++;
+			  		    	}	  		    
+			  		    }
+			  		    toFile[line_number] = t;
+			  		    line_number++;
+	  		    	}
+//	  		    	
+	  		    }
+	  		} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+	  		}
+			HeatChart map = new HeatChart(toFile);
 
+			map.setTitle("Przekrój dla korelacji");
 			try {
-				map.saveToFile(new File("correlation_pixel_map.png"));
+				map.saveToFile(new File("correlation_pixel_map_for_32.png"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			try {
-				createChartForPixel(pixelsA[pixel], pixelsB[pixel]);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			createChartForCorrelation(calculateCorrelationForPixel(pixelsA[pixel], pixelsB[pixel]));
-			
-			
-
-			float[] t1 = new float[dlugosc_okna_czasowego_n];
-			float[] t2 = new float[dlugosc_okna_czasowego_n];
-	    	int id1 = 0;
-	    	  
-	    	for(int j=czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+czas_poczatkowy_t; j++){
-	    		  t1[id1] = pixelsA[pixel][j];
-	    		  id1++;
-	    	}
-	    	id1 = 0;
-	    	for(int j=dlugosc_przesuniecia_k+czas_poczatkowy_t; j<dlugosc_okna_czasowego_n+dlugosc_przesuniecia_k+czas_poczatkowy_t; j++){
-	    		  t2[id1] = pixelsB[pixel][j];
-	    		  id1++;
-	    	}
-	    	try {
-				createTestChartForPixel(t1, t2);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	  
-		    fu.saveToFile("A", framesA.toString());
-		    fu.saveToFile("B", framesB.toString()); 
-		    fu.saveToFile("correlation_map.txt", correlationTableForChart);
 		      
 	}
 	

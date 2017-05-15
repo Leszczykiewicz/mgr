@@ -7,7 +7,7 @@ public class CorrelationObject implements Comparable<CorrelationObject>{
 		if(this.value < (arg0).value){
 			return 1;
 		}
-		if(this.value > (arg0).value){
+		else if(this.value > (arg0).value){
 			return -1;
 		}
 		else
