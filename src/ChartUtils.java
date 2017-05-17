@@ -89,6 +89,23 @@ public class ChartUtils
 //	      ChartUtilities.saveChartAsJPEG(new File("wyniki/statystyka_"+ Main.dlugosc_okna_czasowego_n+ "_" +Main.file.getName()+".jpg"), lineChart, 1120, 720);
 	      
 	   }
+	 
+	public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, float[] framesA, int[] isWindow)
+	   {
+	      JFreeChart lineChart = ChartFactory.createXYLineChart(
+	         chartTitle,
+	         xName,yName,
+	         createDataset(framesA, isWindow),
+	         PlotOrientation.VERTICAL,
+	         true,true,false);
+	         
+	      ChartPanel chartPanel = new ChartPanel( lineChart );
+	      chartPanel.setPreferredSize( new java.awt.Dimension( 1120 , 720 ) );
+	      panel.setLayout(new BorderLayout());
+	      panel.add(chartPanel, BorderLayout.CENTER);
+	      
+	   }	
+	
 	
    public ChartUtils(JPanel panel, String applicationTitle, String chartTitle, String xName, String yName, ArrayList<Frame> framesA, ArrayList<Frame> framesB)
    {
@@ -204,6 +221,28 @@ public class ChartUtils
 	      
 	   XYSeriesCollection dataset = new XYSeriesCollection();
 	   dataset.addSeries(seriesA);
+
+      return dataset;
+   }
+   
+   private XYSeriesCollection createDataset(float[] framesA, int[] isWindow)
+   {
+	   XYSeries seriesA = new XYSeries("Przebieg");
+	   int id = 0;
+	   for(float i : framesA){
+		   seriesA.add(id, i);
+		   id++;
+	   }
+	   
+	   id = 0;
+	   XYSeries seriesB = new XYSeries("Wybór okna");
+	   for(int i : isWindow){
+		   seriesB.add(id, i);
+		   id++;
+	   }
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+	   dataset.addSeries(seriesA);
+	   dataset.addSeries(seriesB);
 
       return dataset;
    }

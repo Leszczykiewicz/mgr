@@ -37,6 +37,8 @@ public class Main {
 	public static int czas_poczatkowy_t = 3000; //2000
 	public static int przesuniecie_do_testow = 0;
 	public static int timeForPixelMap = 0;
+	public static int window_test_fragment_length = 0;
+	public static double window_test_acceptable_value =  0.3;
 	public static GUI gui;
 	public static int temp = 0;
 	public static int pixel = 0;
@@ -56,6 +58,7 @@ public class Main {
 	public static ArrayList<Frame> framesB;
 	public static ArrayList<Integer> pixelsToAutocorrelation = new ArrayList<Integer>();
 	public static ChartUtils chart = new ChartUtils();
+	public static int isWindowTable[];
 	
 	
 	public static void clearCharts(){
@@ -271,6 +274,96 @@ public class Main {
 		}
 	}
 	
+	public static void choiceWindow()
+	{
+		float values[] = new float[framesA.size()];
+
+		if(!pixelsToAutocorrelation.isEmpty())
+		{
+			int id = 0;
+			for(Frame f: framesA){
+				float v = (float) 0.0;
+				for(int i: pixelsToAutocorrelation){
+					v+=f.getC()[i];
+				}
+				v/=pixelsToAutocorrelation.size();
+				values[id] = v;
+				id++;
+			}
+			
+		}
+		else{
+			int id = 0;
+			for(Frame f: framesA){
+				values[id] = f.getAvgC();
+				id++;
+			}
+
+				
+		}
+		
+		
+		System.out.println("wartoœæ akceptowalna: "+window_test_acceptable_value);
+		isWindowTable = new int[framesA.size()];
+		
+		boolean isWindow = false;		
+		int currentIndex = 0;
+		
+		while(currentIndex+window_test_fragment_length<framesA.size())
+		{
+//			System.out.println("current index: " + currentIndex + " framesA: "+ framesA.size());
+			float maxValue = 0;
+			float minValue = Float.MAX_VALUE;
+			for(int j=currentIndex; j<currentIndex+window_test_fragment_length; j++)
+			{
+//				System.out.println("obieg: "+(j-currentIndex) + " maxValue: "+maxValue + " minValue "+minValue + " current Value: "+framesA.get(j).getAvgC());
+				if(values[j] > maxValue){
+					maxValue = values[j];
+				}
+				if(values[j] < minValue){
+					minValue = values[j];
+				}
+			}
+//			System.out.println("max: "+maxValue+" min: "+minValue);
+			System.out.println("obieg: "+(currentIndex) +" ró¿nica: "+Math.abs(maxValue-minValue));
+			if(Math.abs(maxValue-minValue) > window_test_acceptable_value){
+				if(!isWindow){
+					for(int k=currentIndex-(window_test_fragment_length); k<currentIndex+(window_test_fragment_length*2); k++){
+						isWindowTable[k] = 1;
+					}
+					currentIndex += window_test_fragment_length;
+					isWindow = true;
+					System.out.println("pocz¹tek okna");
+				}
+				else{
+					for(int k=currentIndex-(window_test_fragment_length); k<currentIndex+(window_test_fragment_length*2); k++){
+						isWindowTable[k] = 1;
+					}
+					currentIndex += window_test_fragment_length;
+					isWindow = false;
+					System.out.println("koniec okna");
+				}
+			}
+			else{
+				if(!isWindow){
+					isWindowTable[currentIndex] = 0;
+				}
+				else{
+					isWindowTable[currentIndex] = 1;
+				}
+				currentIndex++;
+			}
+		}
+		
+//		for(int i=0; i<framesA.size(); i++){
+//			System.out.println(isWindowTable[i]);
+//		}
+		
+		createChartForWindow(values, isWindowTable);
+		
+	}
+	
+	
 	public static int getMaxAutocorrelation(CorrelationObject[] correlation){
 		
 		float values[] = new float[correlation.length];
@@ -416,6 +509,18 @@ public class Main {
 			      "avg",
 			      framesA,
 			      framesB);
+		gui.setVisible(true);
+	}
+	
+	public static void createChartForWindow(float[] framesA, int[] isWindow){
+		ChartUtils chart = new ChartUtils(
+				   gui.chartWindowPanel,
+			      "Measurement" ,
+			      "Measurement",
+			      "time",
+			      "avg",
+			      framesA,
+			      isWindow);
 		gui.setVisible(true);
 	}
 	
@@ -949,13 +1054,19 @@ public class Main {
 	public static void calculateAvgMeasurementForPixel(){
 		createLoadingFrame();
 		
-		framesA = loadFile();
+//		framesA = loadFile();
 		
-		try {
-			createChartForFrames(framesA);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(isAutocorrelation){
+			try {
+				createChartForFrames(framesA);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		else{
+			createChartForFrames(framesA, framesB);
+		}
+		
 		closeLoadingFrame();
 		GUI.tabbedPanel.setSelectedComponent(GUI.chartDataPanel);
 		

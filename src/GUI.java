@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -48,10 +49,14 @@ public class GUI extends JFrame {
     public static JPanel chartStatisticPanel = new JPanel();
     public static JPanel chartAllPanel = new JPanel();
     public static JPanel allPanel = new JPanel();
+    public static JPanel chartWindowPanel = new JPanel();
+    	
     public static JPanel resultPanel;
     public static JPanel configurationPanel;
     public static JPanel generateAvgMeasurementPanel;
     public static JPanel generatePixelMapPanel;
+    public static JPanel windowPanel;
+
     
     public static JPanel pixelPanel = new JPanel();
     public static JPanel squarePanel = new JPanel();
@@ -75,6 +80,11 @@ public class GUI extends JFrame {
     public static JButton createPixelMapButton;
     public static JLabel testLabel;
     public static JButton testButton;
+    public static JLabel windowLabel;
+    public static JLabel windowAcceptableValueLabel;
+    public static JButton windowButton;
+    public static JSpinner windowSpinner;
+    public static JSpinner windowAcceptableValueSpinner;
     public static JButton createPixelMapForAllTimeButton;
     public static JButton calculateAvgMeasurementForPixelButton;
     public static JButton clearChartButton;
@@ -146,6 +156,16 @@ public class GUI extends JFrame {
         GridBagLayout gridbag_testCorrelationPanel = new GridBagLayout();
         testCorrelationPanel.setLayout(gridbag_testCorrelationPanel);
         testCorrelationPanel.setBorder(BorderFactory.createTitledBorder(null, "Test korelacji", TitledBorder.LEFT, TitledBorder.TOP, new Font("sans Serif", Font.PLAIN, 11), Color.BLACK));
+
+//      -----------------------------------------------------------------------------------
+//      Panel na kontrolki do wyboru okna
+//    -----------------------------------------------------------------------------------
+               
+        JPanel windowPanel = new JPanel();
+        GridBagLayout gridbag_windowPanel = new GridBagLayout();
+        windowPanel.setLayout(gridbag_windowPanel);
+        windowPanel.setBorder(BorderFactory.createTitledBorder(null, "Wybor okna", TitledBorder.LEFT, TitledBorder.TOP, new Font("sans Serif", Font.PLAIN, 11), Color.BLACK));
+     
         
 //      -----------------------------------------------------------------------------------
 //      Panel na kontrolki do generowania mapy pixeli
@@ -219,6 +239,59 @@ public class GUI extends JFrame {
     	testCorrelationPanel.add(testLabel);
     	testCorrelationPanel.add(testSpinner);
     	testCorrelationPanel.add(testButton);
+    	
+    	
+//-----------------------------------------------------------------------------------------
+//    	Kontrolki do wyboru okna 
+//    	------------------------------------------------------------------------------------
+        windowLabel = new JLabel("d³ugoœæ fragmentu:");
+      	windowSpinner = new JSpinner();
+      	windowSpinner.setPreferredSize(new Dimension(50, 15));
+      	windowSpinner.addChangeListener(new ChangeListener() {
+  			
+  			public void stateChanged(ChangeEvent e) {
+  				Main.window_test_fragment_length = (Integer) windowSpinner.getValue();
+  				
+  			}
+  		});
+      	
+      	windowAcceptableValueLabel = new JLabel("wartoœæ akceptowalna:");
+      	windowAcceptableValueSpinner = new JSpinner();
+        SpinnerNumberModel model = new SpinnerNumberModel(0.3, 0.0, 0.5, 0.05);
+        windowAcceptableValueSpinner.setModel(model);
+      	windowAcceptableValueSpinner.addChangeListener(new ChangeListener() {
+  			
+  			public void stateChanged(ChangeEvent e) {
+  				chartWindowPanel.removeAll();
+  				Main.window_test_acceptable_value = (Double) windowAcceptableValueSpinner.getValue();
+  				
+  			}
+  		});
+      	
+      	windowButton = new JButton("Wybór okna");
+      	windowButton.addActionListener(new ActionListener(
+      			) {
+  			
+  			public void actionPerformed(ActionEvent e) {
+  				Main.choiceWindow();
+//  				chartCorrelationPanel.removeAll();
+//  				Main.test();
+  			}
+  		});
+      	
+      	
+      	
+      	gridbag_windowPanel.setConstraints(windowLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+      	gridbag_windowPanel.setConstraints(windowSpinner, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+      	gridbag_windowPanel.setConstraints(windowAcceptableValueLabel, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+      	gridbag_windowPanel.setConstraints(windowAcceptableValueSpinner, new GridBagConstraints(1, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));   	  	
+      	gridbag_windowPanel.setConstraints(windowButton, new GridBagConstraints(0, 2, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));   
+      	
+      	windowPanel.add(windowLabel);
+      	windowPanel.add(windowSpinner);
+      	windowPanel.add(windowButton);
+      	windowPanel.add(windowAcceptableValueLabel);
+      	windowPanel.add(windowAcceptableValueSpinner);
     	
 //      -----------------------------------------------------------------------------------
 //      Kontrolki do generowania mapy pikseli
@@ -815,6 +888,7 @@ public class GUI extends JFrame {
     	configurationGridbag.setConstraints(generatePixelMapPanel, new GridBagConstraints(0, 4, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	configurationGridbag.setConstraints(settingsPanel, new GridBagConstraints(0, 5, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	configurationGridbag.setConstraints(testCorrelationPanel, new GridBagConstraints(0, 6, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
+    	configurationGridbag.setConstraints(windowPanel, new GridBagConstraints(0, 7, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0));
     	
     	
         configurationPanel.add(calculateTypePanel);
@@ -822,6 +896,7 @@ public class GUI extends JFrame {
         configurationPanel.add(inputFilePanel);
         configurationPanel.add(settingsPanel);
         configurationPanel.add(testCorrelationPanel);
+        configurationPanel.add(windowPanel);
         
        
         resultPanel.setLayout(new BorderLayout());
@@ -1077,6 +1152,8 @@ public class GUI extends JFrame {
         tabbedPanel.addTab("Test", chartTestPanel);
         tabbedPanel.addTab("Korelacja", chartCorrelationPanel);
         tabbedPanel.addTab("Przesuniêcie w czasie", chartCorrelationInTimePanel);
+        tabbedPanel.addTab("Wybór okna", chartWindowPanel);
+        
     }
     
     public void addComponentForSpeedForVector(){
