@@ -277,7 +277,46 @@ public class Main {
 	public static void choiceWindow()
 	{
 		float values[] = new float[framesA.size()];
-
+		isWindowTable = new int[framesA.size()];
+		
+		
+//		---------------wersja banalna Mosorowa-------------
+//		if(!pixelsToAutocorrelation.isEmpty())
+//		{
+//			int id = 0;
+//			for(Frame f: framesA){
+//				float v = (float) 0.0;
+//				for(int i: pixelsToAutocorrelation){
+//					v+=f.getC()[i];
+//				}
+//				v/=pixelsToAutocorrelation.size();
+//				values[id] = v;
+//				id++;
+//			}
+//			
+//		}
+//		else{
+//			int id = 0;
+//			for(Frame f: framesA){
+//				values[id] = f.getAvgC();
+//				id++;
+//			}
+//
+//				
+//		}	
+//		
+//		for(int i=0; i<values.length; i++)
+//		{
+//			if(values[i]>window_test_acceptable_value){
+//				isWindowTable[i] = 1;
+//			}
+//			else{
+//				isWindowTable[i] = 0;
+//			}
+//		}
+		
+//--wersja z artyku³u Mosorowa - bardziej ciut skomplikowana---------------------------------
+		
 		if(!pixelsToAutocorrelation.isEmpty())
 		{
 			int id = 0;
@@ -305,59 +344,134 @@ public class Main {
 		
 		System.out.println("wartoœæ akceptowalna: "+window_test_acceptable_value);
 		isWindowTable = new int[framesA.size()];
+		int start_index = 0;
+		float avg_value = (float) 0.0;
 		
-		boolean isWindow = false;		
-		int currentIndex = 0;
-		
-		while(currentIndex+window_test_fragment_length<framesA.size())
-		{
-//			System.out.println("current index: " + currentIndex + " framesA: "+ framesA.size());
-			float maxValue = 0;
-			float minValue = Float.MAX_VALUE;
-			for(int j=currentIndex; j<currentIndex+window_test_fragment_length; j++)
-			{
-//				System.out.println("obieg: "+(j-currentIndex) + " maxValue: "+maxValue + " minValue "+minValue + " current Value: "+framesA.get(j).getAvgC());
-				if(values[j] > maxValue){
-					maxValue = values[j];
+		while(start_index+window_test_fragment_length < values.length){
+			avg_value = (float) 0.0;
+			for(int i=start_index; i<start_index+window_test_fragment_length; i++){
+				if(values[i] > 0)
+				{
+					avg_value += values[i];
 				}
-				if(values[j] < minValue){
-					minValue = values[j];
-				}
+				System.out.println("avg_value "+ values[i]);
 			}
-//			System.out.println("max: "+maxValue+" min: "+minValue);
-			System.out.println("obieg: "+(currentIndex) +" ró¿nica: "+Math.abs(maxValue-minValue));
-			if(Math.abs(maxValue-minValue) > window_test_acceptable_value){
-				if(!isWindow){
-					for(int k=currentIndex-(window_test_fragment_length); k<currentIndex+(window_test_fragment_length*2); k++){
-						isWindowTable[k] = 1;
-					}
-					currentIndex += window_test_fragment_length;
-					isWindow = true;
-					System.out.println("pocz¹tek okna");
-				}
-				else{
-					for(int k=currentIndex-(window_test_fragment_length); k<currentIndex+(window_test_fragment_length*2); k++){
-						isWindowTable[k] = 1;
-					}
-					currentIndex += window_test_fragment_length;
-					isWindow = false;
-					System.out.println("koniec okna");
-				}
+			avg_value /= window_test_fragment_length;
+			System.out.println("result avg_value: "+avg_value+ "i: "+ start_index);
+			
+			if(avg_value > window_test_acceptable_value)
+			{
+				isWindowTable[start_index+(window_test_fragment_length/2)] = 1;
+//				for(int i=start_index+window_test_fragment_length; i<start_index+window_test_fragment_length; i++){
+//					isWindowTable[i] = 1;
+//				}
 			}
 			else{
-				if(!isWindow){
-					isWindowTable[currentIndex] = 0;
-				}
-				else{
-					isWindowTable[currentIndex] = 1;
-				}
-				currentIndex++;
+				isWindowTable[start_index+(window_test_fragment_length/2)] = 0;
+//				for(int i=start_index; i<start_index+window_test_fragment_length; i++){
+//					isWindowTable[i] = 0;
+//				}
 			}
+			start_index ++;
 		}
+		
 		
 //		for(int i=0; i<framesA.size(); i++){
 //			System.out.println(isWindowTable[i]);
 //		}
+//		----------------koniec---------------------------------------		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+//       -----------------wersja moja
+//		if(!pixelsToAutocorrelation.isEmpty())
+//		{
+//			int id = 0;
+//			for(Frame f: framesA){
+//				float v = (float) 0.0;
+//				for(int i: pixelsToAutocorrelation){
+//					v+=f.getC()[i];
+//				}
+//				v/=pixelsToAutocorrelation.size();
+//				values[id] = v;
+//				id++;
+//			}
+//			
+//		}
+//		else{
+//			int id = 0;
+//			for(Frame f: framesA){
+//				values[id] = f.getAvgC();
+//				id++;
+//			}
+//
+//				
+//		}
+//		
+//		
+//		System.out.println("wartoœæ akceptowalna: "+window_test_acceptable_value);
+//		isWindowTable = new int[framesA.size()];
+//		
+//		boolean isWindow = false;		
+//		int currentIndex = 0;
+//		
+//		while(currentIndex+window_test_fragment_length<framesA.size())
+//		{
+////			System.out.println("current index: " + currentIndex + " framesA: "+ framesA.size());
+//			float maxValue = 0;
+//			float minValue = Float.MAX_VALUE;
+//			for(int j=currentIndex; j<currentIndex+window_test_fragment_length; j++)
+//			{
+////				System.out.println("obieg: "+(j-currentIndex) + " maxValue: "+maxValue + " minValue "+minValue + " current Value: "+framesA.get(j).getAvgC());
+//				if(values[j] > maxValue){
+//					maxValue = values[j];
+//				}
+//				if(values[j] < minValue){
+//					minValue = values[j];
+//				}
+//			}
+////			System.out.println("max: "+maxValue+" min: "+minValue);
+//			System.out.println("obieg: "+(currentIndex) +" ró¿nica: "+Math.abs(maxValue-minValue));
+//			if(Math.abs(maxValue-minValue) > window_test_acceptable_value){
+//				if(!isWindow){
+//					for(int k=currentIndex-(window_test_fragment_length); k<currentIndex+(window_test_fragment_length*2); k++){
+//						isWindowTable[k] = 1;
+//					}
+//					currentIndex += window_test_fragment_length;
+//					isWindow = true;
+//					System.out.println("pocz¹tek okna");
+//				}
+//				else{
+//					for(int k=currentIndex-(window_test_fragment_length); k<currentIndex+(window_test_fragment_length*2); k++){
+//						isWindowTable[k] = 1;
+//					}
+//					currentIndex += window_test_fragment_length;
+//					isWindow = false;
+//					System.out.println("koniec okna");
+//				}
+//			}
+//			else{
+//				if(!isWindow){
+//					isWindowTable[currentIndex] = 0;
+//				}
+//				else{
+//					isWindowTable[currentIndex] = 1;
+//				}
+//				currentIndex++;
+//			}
+//		}
+//		
+////		for(int i=0; i<framesA.size(); i++){
+////			System.out.println(isWindowTable[i]);
+////		}
+//		----------------koniec---------------------------------------
 		
 		createChartForWindow(values, isWindowTable);
 		
@@ -1291,24 +1405,65 @@ public class Main {
 	  	id = 0;
 	  	int temp_czas_poczatkowy = czas_poczatkowy_t;
 	  	System.out.println(framesAToSpeed.size());
-	  	while(czas_poczatkowy_t < framesAToSpeed.size() - dlugosc_okna_czasowego_n*2-1-dlugosc_przesuniecia_k){
+	  	ArrayList<Integer> startWindowIndex = new ArrayList<Integer>();
+	  	ArrayList<Integer> lengthOfWindow = new ArrayList<Integer>();
+	  	int length = 0;
+	  	int lastValue = 0;
+	  	for(int i=0; i<isWindowTable.length; i++){
+	  		if(isWindowTable[i] == 1)
+		  		if(lastValue == 0){
+		  			startWindowIndex.add(i);
+		  			length++;
+		  			lastValue = 1;
+		  		}
+		  		else{
+		  			length++;
+		  		}
+	  		else{
+	  			if(lastValue == 1)
+	  			{
+	  				lengthOfWindow.add(length);
+	  				lastValue = 0;
+	  				length = 0;
+	  			}
+	  		}
+	  	}
+	  	
+	  	for(int j=0; j<startWindowIndex.size(); j++){
+//	  	while(czas_poczatkowy_t < framesAToSpeed.size() - dlugosc_okna_czasowego_n*2-1-dlugosc_przesuniecia_k){
   	  	
-	  	  	double[][] correlationTable = new double [32][32];
-			int a = 0, b=0;
-			
-//			CorrelationObject temp_correlation = new CorrelationObject(0, id);
-			int temp_speed = 0;
-			for(int i:pixelsToAutocorrelation){
-				CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);
-//				Arrays.sort(correlation);
-				temp_speed += getMaxAutocorrelation(correlation);	
-//				System.out.println(temp_correlation.value);
-			}
-			temp_speed /= pixelsToAutocorrelation.size();
-			
-			correlations_speed_for_test_chart[id] = temp_speed;
-			id++;
-			czas_poczatkowy_t++;
+	  		
+	  		
+	  		for(int k=0; k<lengthOfWindow.get(j); k++){
+	  			czas_poczatkowy_t = startWindowIndex.get(j)+k;
+		  		dlugosc_okna_czasowego_n = lengthOfWindow.get(j);
+		  		if(czas_poczatkowy_t+dlugosc_okna_czasowego_n+dlugosc_przesuniecia_k >= pixelsA.length)
+		  		{
+		  			break;
+		  		}
+		  		System.out.println("czas_poczatkowy_t: "+czas_poczatkowy_t+" dlugosc okna czasowego: "+dlugosc_okna_czasowego_n);
+		  		double[][] correlationTable = new double [32][32];
+				int a = 0, b=0;
+				
+//				CorrelationObject temp_correlation = new CorrelationObject(0, id);
+				int temp_speed = 0;
+				for(int i:pixelsToAutocorrelation){
+					CorrelationObject[] correlation = calculateCorrelationForPixel(pixelsA[i], pixelsB[i]);
+//					Arrays.sort(correlation);
+					temp_speed += getMaxAutocorrelation(correlation);	
+//					System.out.println(temp_correlation.value);
+				}
+				temp_speed /= pixelsToAutocorrelation.size();
+				System.out.println("speed: "+temp_speed);
+				correlations_speed_for_test_chart[czas_poczatkowy_t] = temp_speed;
+				if(czas_poczatkowy_t > framesAToSpeed.size() - dlugosc_okna_czasowego_n*2-1-dlugosc_przesuniecia_k){
+					break;
+				}
+//				id++;
+//				czas_poczatkowy_t++;
+	  		}
+	  		
+	  	  	
 	  	}
 			
 	  	czas_poczatkowy_t = temp_czas_poczatkowy;
@@ -1409,12 +1564,39 @@ public class Main {
 		bw.close();
 		fw.close();
 		
+		String concentrate_to_fileA = "";
+		for(Frame f: framesAToSpeed){
+			concentrate_to_fileA +=f.getAvgC()+", ";
+		}
+		concentrate_to_fileA+="\n";
+		
+		file = new File("koncentracjaA.txt");
+	  	fw = new FileWriter(file.getAbsoluteFile(), true);
+		bw = new BufferedWriter(fw);
+		bw.write(concentrate_to_fileA);
+		
+		bw.close();
+		fw.close();
+		
+		String concentrate_to_fileB = "";
+		for(Frame f: framesBToSpeed){
+			concentrate_to_fileB +=f.getAvgC()+", ";
+		}
+		concentrate_to_fileB+="\n";
+		
+		file = new File("koncentracjaB.txt");
+	  	fw = new FileWriter(file.getAbsoluteFile(), true);
+		bw = new BufferedWriter(fw);
+		bw.write(concentrate_to_fileB);
+		
+		bw.close();
+		fw.close();
 	  		
 		
 //		fu.saveToFile("przesuniecia.txt", corr_to_file);
 	  		
 //--------------------fragment do generowania wykresu dla 32 pikseli w czasie	  		
-	  		double[][] toFile = new double[32][10700];
+	  		double[][] toFile = new double[32][2150];
 	  		
 	  		File file2 = new File("przesuniecia_razem.txt");
 	  		FileInputStream fis = null;
@@ -1432,9 +1614,9 @@ public class Main {
 			  		    String tab[] = line.split(",");
 			  		    int d = tab.length;
 			  		    System.out.println(tab.length);
-			  		    double t[] = new double[10700];
+			  		    double t[] = new double[2150];
 			  		    id = 0;
-			  		    for(int i=0; i<10700; i++){
+			  		    for(int i=0; i<2150; i++){
 			  		    	String s = "";
 			  		    	if(i<tab.length)
 			  		    	{
@@ -1460,14 +1642,21 @@ public class Main {
 	  		}
 			HeatChart map = new HeatChart(toFile);
 
-			map.setTitle("Przekrój dla korelacji");
+			map.setTitle("Przesuniêcie");
 			try {
-				map.saveToFile(new File("correlation_pixel_map_for_32.png"));
+				map.saveToFile(new File("przesuniecie.png"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//----------------------------------		      
+//----------------------------------
+		
+		
+//		--------fragment do generowania wykresu dla koncentracji
+		
+		
+		
+//		-------------------------------------------------------
 	}
 	
 	
