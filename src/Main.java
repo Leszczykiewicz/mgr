@@ -1428,7 +1428,7 @@ public class Main {
 	  			}
 	  		}
 	  	}
-	  	
+	  	System.out.println("iloœæ wybranych okien: "+startWindowIndex.size());
 	  	for(int j=0; j<startWindowIndex.size(); j++){
 //	  	while(czas_poczatkowy_t < framesAToSpeed.size() - dlugosc_okna_czasowego_n*2-1-dlugosc_przesuniecia_k){
   	  	
@@ -1437,11 +1437,13 @@ public class Main {
 	  		for(int k=0; k<lengthOfWindow.get(j); k++){
 	  			czas_poczatkowy_t = startWindowIndex.get(j)+k;
 		  		dlugosc_okna_czasowego_n = lengthOfWindow.get(j);
-		  		if(czas_poczatkowy_t+dlugosc_okna_czasowego_n+dlugosc_przesuniecia_k >= pixelsA.length)
+		  		if(czas_poczatkowy_t+dlugosc_okna_czasowego_n+dlugosc_przesuniecia_k >= pixelsA[0].length)
 		  		{
+		  			System.out.println("czas_poczatkowy_t: "+czas_poczatkowy_t+" dlugosc okna czasowego: "+dlugosc_okna_czasowego_n+" dlugosc pixelsA: "+pixelsA[k].length);
+		  			System.out.println("break");
 		  			break;
 		  		}
-		  		System.out.println("czas_poczatkowy_t: "+czas_poczatkowy_t+" dlugosc okna czasowego: "+dlugosc_okna_czasowego_n);
+		  		System.out.println("czas_poczatkowy_t: "+czas_poczatkowy_t+" dlugosc okna czasowego: "+dlugosc_okna_czasowego_n +"dlugosc pixelsA: "+pixelsA[0].length);
 		  		double[][] correlationTable = new double [32][32];
 				int a = 0, b=0;
 				
@@ -1596,59 +1598,59 @@ public class Main {
 //		fu.saveToFile("przesuniecia.txt", corr_to_file);
 	  		
 //--------------------fragment do generowania wykresu dla 32 pikseli w czasie	  		
-	  		double[][] toFile = new double[32][2150];
-	  		
-	  		File file2 = new File("przesuniecia_razem.txt");
-	  		FileInputStream fis = null;
-	        try {
-	            fis = new FileInputStream(file2);
-	            byte[] data = new byte[(int) file2.length()];
-	            fis.read(data);
-	            fis.close();
-	            String str = new String(data, "UTF-8");
-	  		    
-	  		    int line_number = 0;
-	  		    for(String line: str.split("\n")){
-	  		    	if(!line.equals("") && !line.isEmpty()){
-	  		    		System.out.println(line);
-			  		    String tab[] = line.split(",");
-			  		    int d = tab.length;
-			  		    System.out.println(tab.length);
-			  		    double t[] = new double[2150];
-			  		    id = 0;
-			  		    for(int i=0; i<2150; i++){
-			  		    	String s = "";
-			  		    	if(i<tab.length)
-			  		    	{
-			  		    		s+=tab[i];
-			  		    	}
-			  		    	else{
-			  		    		s+="0";
-			  		    	}
-			  		    	if(!s.trim().equals("") && !s.trim().isEmpty()){
-			  		    		t[id] = Double.parseDouble(s.trim());
-			  		    		id++;
-			  		    	}	  		    
-			  		    }
-			  		    toFile[line_number] = t;
-			  		    line_number++;
-	  		    	}
-//	  		    	
-	  		    }
-	  		} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				
-	  		}
-			HeatChart map = new HeatChart(toFile);
-
-			map.setTitle("Przesuniêcie");
-			try {
-				map.saveToFile(new File("przesuniecie.png"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//	  		double[][] toFile = new double[32][2150];
+//	  		
+//	  		File file2 = new File("przesuniecia_razem.txt");
+//	  		FileInputStream fis = null;
+//	        try {
+//	            fis = new FileInputStream(file2);
+//	            byte[] data = new byte[(int) file2.length()];
+//	            fis.read(data);
+//	            fis.close();
+//	            String str = new String(data, "UTF-8");
+//	  		    
+//	  		    int line_number = 0;
+//	  		    for(String line: str.split("\n")){
+//	  		    	if(!line.equals("") && !line.isEmpty()){
+//	  		    		System.out.println(line);
+//			  		    String tab[] = line.split(",");
+//			  		    int d = tab.length;
+//			  		    System.out.println(tab.length);
+//			  		    double t[] = new double[2150];
+//			  		    id = 0;
+//			  		    for(int i=0; i<2150; i++){
+//			  		    	String s = "";
+//			  		    	if(i<tab.length)
+//			  		    	{
+//			  		    		s+=tab[i];
+//			  		    	}
+//			  		    	else{
+//			  		    		s+="0";
+//			  		    	}
+//			  		    	if(!s.trim().equals("") && !s.trim().isEmpty()){
+//			  		    		t[id] = Double.parseDouble(s.trim());
+//			  		    		id++;
+//			  		    	}	  		    
+//			  		    }
+//			  		    toFile[line_number] = t;
+//			  		    line_number++;
+//	  		    	}
+////	  		    	
+//	  		    }
+//	  		} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				
+//	  		}
+//			HeatChart map = new HeatChart(toFile);
+//
+//			map.setTitle("Przesuniêcie");
+//			try {
+//				map.saveToFile(new File("przesuniecie.png"));
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 //----------------------------------
 		
 		
